@@ -1,0 +1,202 @@
+/*
+  TripWise design tokens.
+  Palette: stone neutrals with a single rust accent (light and dark, following
+  the system color scheme). Shape rule: controls 10px, cards and dialog 16px,
+  chips, badges and nav pills fully rounded.
+*/
+:root {
+  color-scheme: light dark;
+
+  --bg: #f3f4f1;
+  --surface: #fbfbf9;
+  --surface-2: #e9ece6;
+  --ink: #16201c;
+  --ink-2: #44504a;
+  --ink-3: #59655f;
+  --line: #d3d8d1;
+  --line-strong: #7a857f;
+  --accent: #c2410c;
+  --on-accent: #fffaf6;
+  --accent-ink: #ad3a0b;
+  --accent-soft: #f9e2d4;
+  --contour: rgb(22 32 28 / 0.07);
+  --ok: #1d6b47;
+  --ok-soft: #dcefe3;
+  --danger: #b42318;
+  --danger-soft: #fce6e3;
+  --warn: #7a4d00;
+  --warn-soft: #fbefd5;
+  --shadow: 0 1px 2px rgb(22 32 28 / 0.06), 0 8px 24px -12px rgb(22 32 28 / 0.18);
+  --backdrop: rgb(14 20 18 / 0.55);
+
+  --font: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, sans-serif;
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-pill: 999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 64px;
+
+  font-family: var(--font);
+  font-optical-sizing: auto;
+  font-size: 100%;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1412;
+    --surface: #151d1a;
+    --surface-2: #1f2a26;
+    --ink: #e9ede9;
+    --ink-2: #b8c2bc;
+    --ink-3: #9aa7a0;
+    --line: #2a3632;
+    --line-strong: #64736c;
+    --accent: #f08a4b;
+    --on-accent: #1b0d05;
+    --accent-ink: #f59a62;
+    --accent-soft: #3a2317;
+    --contour: rgb(233 237 233 / 0.06);
+    --ok: #74d3a3;
+    --ok-soft: #173328;
+    --danger: #ff8f80;
+    --danger-soft: #3b1b18;
+    --warn: #f3c46b;
+    --warn-soft: #36290f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -14px rgb(0 0 0 / 0.6);
+    --backdrop: rgb(4 7 6 / 0.7);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Keep focused/scrolled-to elements clear of the sticky header (WCAG 2.4.11). */
+html {
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+#root {
+  display: contents;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent-ink);
+  text-underline-offset: 0.18em;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+svg {
+  flex-shrink: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+[tabindex='-1']:focus:not(:focus-visible) {
+  outline: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Native checkbox/radio kept for semantics and keyboard use while a styled
+   label shows state. Unlike .visually-hidden it never un-hides on focus. */
+.sr-input {
+  position: absolute;
+  clip-path: inset(50%);
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
