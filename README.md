@@ -11,7 +11,7 @@ itinerary that is stored in a database.
 
 | Item | Link |
 |------|------|
-| GitHub repository | `TODO: add public repository URL` |
+| GitHub repository | https://github.com/rohitvishwaa-ops/TripWise |
 | Live website (frontend) | `TODO: add deployed frontend URL` |
 | Live API (backend) | `TODO: add deployed backend URL` (interactive docs at `<backend URL>/docs`) |
 | Screenshots PDF | `TODO: <register no>_<Track>.pdf` |
