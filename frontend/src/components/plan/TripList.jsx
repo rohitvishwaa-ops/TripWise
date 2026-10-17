@@ -55,6 +55,7 @@ export default function TripList({ state, onRetry, headingId }) {
             const range = formatTripRange(trip.start_date, trip.end_date)
             return (
               <li key={trip.id}>
+                <div className="saved-trip-row">
                 <a className="saved-trip" href={`#plan/${trip.id}`}>
                   <DestinationImage city={city} className="saved-trip__media" alt={`Photo of ${city}`} />
                   <span className="saved-trip__body">
@@ -71,6 +72,8 @@ export default function TripList({ state, onRetry, headingId }) {
                   </span>
                   <ArrowRight className="saved-trip__arrow" aria-hidden="true" size={18} />
                 </a>
+                <a className="btn btn--ghost btn--sm saved-trip__continue" href={`#plan/${trip.id}`}>Continue planning</a>
+                </div>
               </li>
             )
           })}

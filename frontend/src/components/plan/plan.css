@@ -515,6 +515,13 @@ a.saved-trip:hover .saved-trip__arrow {
   padding: 24px;
 }
 
+.trip-print {
+  justify-self: start;
+  color: var(--on-accent);
+  border-color: rgb(255 250 246 / 0.34);
+  background: rgb(255 250 246 / 0.12);
+}
+
 @media (min-width: 768px) {
   .trip-hero__content {
     padding: 40px 44px;
@@ -596,6 +603,20 @@ a.saved-trip:hover .saved-trip__arrow {
   background: var(--surface-2);
   color: var(--ink);
   box-shadow: none;
+}
+
+@media print {
+  @page { margin: 16mm; }
+  body { background: #fff; color: #20283A; }
+  .site-header, .site-footer, .back-link, .trip-print, .edit-status, .stop-panel, .day-card__side, .add-saved, .data-credit { display: none !important; }
+  .page { max-width: none; padding: 0; }
+  .trip-detail { max-width: none; }
+  .trip-hero { min-height: 0; color: #20283A; box-shadow: none; border: 1px solid #D6C5A8; background: #FFFEFB; }
+  .trip-hero__media, .trip-hero::after, .image-credit { display: none !important; }
+  .trip-hero__content { padding: 0 0 12px; }
+  .trip-hero__city, .trip-hero__title, .trip-hero__facts li, .trip-hero__interests li { color: #20283A; background: transparent; border-color: #D6C5A8; }
+  .day-card { break-inside: avoid; box-shadow: none; border-color: #D6C5A8; }
+  .stop { break-inside: avoid; }
 }
 
 .trip-hero--skeleton::after {

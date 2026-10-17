@@ -5,6 +5,7 @@ import TripView from './components/TripView.jsx'
 import PlanView from './components/plan/PlanView.jsx'
 import PlaceDialog from './components/PlaceDialog.jsx'
 import DataCredit from './components/DataCredit.jsx'
+import AddToDayDialog from './components/AddToDayDialog.jsx'
 import { useGlide } from './components/fx/useGlide.js'
 import { TripProvider, useTrip } from './state/TripContext.jsx'
 import { AnnouncerProvider } from './state/Announcer.jsx'
@@ -30,6 +31,7 @@ function Shell() {
   const { view, param } = useHashRoute()
   const { items, status } = useTrip()
   const [selected, setSelected] = useState(null)
+  const [dayPlace, setDayPlace] = useState(null)
   const exploreHeading = useRef(null)
   const tripHeading = useRef(null)
   const planHeading = useRef(null)
@@ -140,7 +142,7 @@ function Shell() {
 
       <main id="content" tabIndex={-1} className="page">
         <div hidden={view !== 'explore'}>
-          <ExploreView headingRef={exploreHeading} onOpenPlace={setSelected} />
+          <ExploreView headingRef={exploreHeading} onOpenPlace={setSelected} onAddToDay={setDayPlace} />
         </div>
         <div hidden={view !== 'plan'}>
           <PlanView tripParam={param} headingRef={planHeading} active={view === 'plan'} />
@@ -158,7 +160,9 @@ function Shell() {
         place={selected}
         onClose={() => setSelected(null)}
         onGoToTrip={view === 'trip' ? null : goToTrip}
+        onAddToDay={(place) => { setSelected(null); setDayPlace(place) }}
       />
+      <AddToDayDialog place={dayPlace} onClose={() => setDayPlace(null)} />
     </>
   )
 }

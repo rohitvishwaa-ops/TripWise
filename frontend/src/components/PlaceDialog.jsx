@@ -20,7 +20,7 @@ const supportsClosedBy =
  * inert background come from the platform. closedby="any" adds light dismiss
  * where supported, with a click-outside fallback elsewhere (Safari).
  */
-export default function PlaceDialog({ place, onClose, onGoToTrip }) {
+export default function PlaceDialog({ place, onClose, onGoToTrip, onAddToDay }) {
   const dialogRef = useRef(null)
   const titleId = useId()
   const { savedIds, items, pending, add, remove, status: tripStatus } = useTrip()
@@ -191,9 +191,11 @@ export default function PlaceDialog({ place, onClose, onGoToTrip }) {
                       View My Trip
                     </button>
                   )}
+                  {onAddToDay && <button type="button" className="btn btn--ghost" onClick={() => onAddToDay(current)}>Add to a day</button>}
                 </div>
               </>
             ) : (
+              <>
               <button
                 type="button"
                 className="btn btn--primary btn--block"
@@ -203,6 +205,8 @@ export default function PlaceDialog({ place, onClose, onGoToTrip }) {
                 <Plus aria-hidden="true" size={18} weight="bold" />
                 {busy ? 'Adding…' : 'Add to My Trip'}
               </button>
+              {onAddToDay && <button type="button" className="btn btn--ghost btn--block" onClick={() => onAddToDay(current)}>Add to a trip day</button>}
+              </>
             )}
           </div>
         </div>

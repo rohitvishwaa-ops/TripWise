@@ -6,6 +6,7 @@ import {
   CheckCircle,
   Info,
   MapPin,
+  Printer,
   WarningCircle,
   X,
 } from '@phosphor-icons/react'
@@ -248,6 +249,10 @@ export default function TripDetail({ trip, warnings, headingRef, onTripChange })
               {totalStops} {totalStops === 1 ? 'stop' : 'stops'}
             </li>
           </ul>
+          <button type="button" className="btn btn--ghost trip-print" onClick={() => window.print()}>
+            <Printer aria-hidden="true" size={18} />
+            Print / Save as PDF
+          </button>
           {trip.interests.length > 0 && (
             <ul className="trip-hero__interests" role="list" aria-label="Interests">
               {trip.interests.map((i) => (

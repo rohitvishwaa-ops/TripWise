@@ -3,10 +3,10 @@ import { categoryLabels, formatCoordinates, placeName } from '../lib/format.js'
 import DestinationImage from './plan/DestinationImage.jsx'
 import { addressCity } from '../lib/destinationImage.js'
 
-export default function PlaceCard({ place, index, saved, onOpen }) {
+export default function PlaceCard({ place, index, saved, selected, onOpen, onSelect, onAdd, onAddToDay }) {
   const tags = categoryLabels(place.categories)
   return (
-    <li className="place-card" style={{ '--i': Math.min(index, 12) }}>
+    <li className={`place-card${selected ? ' place-card--selected' : ''}`} style={{ '--i': Math.min(index, 12) }}>
       <DestinationImage
         city={placeName(place)}
         className="place-card__media"
@@ -25,7 +25,7 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
         </ul>
       )}
       <h3 className="place-card__title">
-        <button type="button" className="stretched" onClick={() => onOpen(place)}>
+        <button type="button" className="stretched" onClick={() => { onSelect?.(place.id); onOpen(place) }} onFocus={() => onSelect?.(place.id)} onMouseEnter={() => onSelect?.(place.id)}>
           {placeName(place)}
         </button>
       </h3>
@@ -41,6 +41,12 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
             In My Trip
           </span>
         )}
+        {!saved && onAdd && (
+          <button type="button" className="btn btn--ghost btn--sm place-card__add" onClick={() => onAdd(place)}>
+            Add to My Trip
+          </button>
+        )}
+        {onAddToDay && <button type="button" className="text-action place-card__day" onClick={() => onAddToDay(place)}>Add to a day</button>}
       </div>
       </div>
     </li>

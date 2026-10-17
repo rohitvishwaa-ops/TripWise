@@ -1065,6 +1065,79 @@ body::before {
     transform 220ms var(--ease-out);
 }
 
+.place-card--selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow);
+}
+
+.place-card__add,
+.place-card__day {
+  position: relative;
+  z-index: 2;
+}
+
+.place-card__day {
+  margin-inline-start: auto;
+}
+
+.results__tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 8px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.view-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.view-toggle button.is-active { background: var(--ink); color: var(--bg); }
+
+.explore-map {
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  background: var(--surface-2);
+}
+
+.map-return { margin-block-start: 12px; }
+
+.saved-trip-row {
+  display: grid;
+  gap: 8px;
+}
+
+.saved-trip__continue { justify-self: start; }
+
+.add-day-fields { display: grid; gap: 14px; }
+
+@media (max-width: 700px) {
+  .results__tools { justify-content: start; }
+  .explore-map { min-height: 430px; }
+}
+
 .place-card__media {
   position: relative;
   height: 142px;

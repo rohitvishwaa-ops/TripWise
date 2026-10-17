@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { ArrowClockwise, MapTrifold, WarningCircle } from '@phosphor-icons/react'
+import { ArrowClockwise, List, MapTrifold, WarningCircle } from '@phosphor-icons/react'
 import SearchForm from './SearchForm.jsx'
 import PlaceCard, { PlaceCardSkeleton } from './PlaceCard.jsx'
 import DataCredit from './DataCredit.jsx'
@@ -7,6 +7,7 @@ import { searchPlaces } from '../lib/api.js'
 import { formatCoordinates, formatDistanceKm } from '../lib/format.js'
 import { useTrip } from '../state/TripContext.jsx'
 import { useAnnounce } from '../state/Announcer.jsx'
+import MapView from './MapView.jsx'
 
 const SORTS = [
   { value: 'relevance', label: 'Relevance' },
@@ -14,13 +15,15 @@ const SORTS = [
   { value: 'name_desc', label: 'Name Z to A' },
 ]
 
-export default function ExploreView({ headingRef, onOpenPlace }) {
+export default function ExploreView({ headingRef, onOpenPlace, onAddToDay }) {
   const uid = useId()
-  const { savedIds } = useTrip()
+  const { savedIds, pending, add } = useTrip()
   const announce = useAnnounce()
   const [query, setQuery] = useState(null) // last submitted search params
   const [sort, setSort] = useState('relevance')
   const [result, setResult] = useState({ status: 'idle', data: null, error: null })
+  const [presentation, setPresentation] = useState('list')
+  const [selectedId, setSelectedId] = useState(null)
   const controller = useRef(null)
 
   useEffect(() => () => controller.current?.abort(), [])
@@ -49,6 +52,11 @@ export default function ExploreView({ headingRef, onOpenPlace }) {
   function changeSort(value) {
     setSort(value)
     if (query) run(query, value)
+  }
+
+  async function addPlace(place) {
+    const outcome = await add(place)
+    announce(outcome.ok ? `Added ${place.name} to My Trip.` : `Couldn't add ${place.name}.`)
   }
 
   const { status, data, error } = result
@@ -98,22 +106,25 @@ export default function ExploreView({ headingRef, onOpenPlace }) {
               )}
             </div>
 
-            <fieldset className="segmented" disabled={!query}>
-              <legend className="visually-hidden">Sort results</legend>
-              {SORTS.map((s) => (
-                <label key={s.value} className="segmented__option">
-                  <input
-                    type="radio"
-                    className="sr-input"
-                    name={`${uid}-sort`}
-                    value={s.value}
-                    checked={sort === s.value}
-                    onChange={() => changeSort(s.value)}
-                  />
-                  <span>{s.label}</span>
-                </label>
-              ))}
-            </fieldset>
+            <div className="results__tools">
+              <div className="view-toggle" role="group" aria-label="Results view">
+                <button type="button" className={presentation === 'list' ? 'is-active' : ''} aria-pressed={presentation === 'list'} onClick={() => setPresentation('list')}>
+                  <List aria-hidden="true" size={16} /> List
+                </button>
+                <button type="button" className={presentation === 'map' ? 'is-active' : ''} aria-pressed={presentation === 'map'} onClick={() => setPresentation('map')}>
+                  <MapTrifold aria-hidden="true" size={16} /> Map
+                </button>
+              </div>
+              <fieldset className="segmented" disabled={!query}>
+                <legend className="visually-hidden">Sort results</legend>
+                {SORTS.map((s) => (
+                  <label key={s.value} className="segmented__option">
+                    <input type="radio" className="sr-input" name={`${uid}-sort`} value={s.value} checked={sort === s.value} onChange={() => changeSort(s.value)} />
+                    <span>{s.label}</span>
+                  </label>
+                ))}
+              </fieldset>
+            </div>
           </div>
 
           {status === 'idle' && (
@@ -146,21 +157,22 @@ export default function ExploreView({ headingRef, onOpenPlace }) {
             </div>
           )}
 
-          {(loading || (status === 'success' && data.count > 0)) && (
+          {loading && (
             <ul className="place-grid" role="list">
-              {loading ? (
-                <PlaceCardSkeleton count={6} />
-              ) : (
-                data.places.map((place, i) => (
-                  <PlaceCard
-                    key={place.id ?? `${place.latitude},${place.longitude},${i}`}
-                    place={place}
-                    index={i}
-                    saved={place.id ? savedIds.has(place.id) : false}
-                    onOpen={onOpenPlace}
-                  />
-                ))
-              )}
+              <PlaceCardSkeleton count={6} />
+            </ul>
+          )}
+          {status === 'success' && data.count > 0 && presentation === 'map' && (
+            <>
+              <MapView places={data.places} selectedId={selectedId} onSelect={setSelectedId} />
+              <p className="map-return"><button type="button" className="btn btn--ghost btn--sm" onClick={() => setPresentation('list')}><List aria-hidden="true" size={16} /> Return to list</button></p>
+            </>
+          )}
+          {status === 'success' && data.count > 0 && presentation === 'list' && (
+            <ul className="place-grid" role="list">
+              {data.places.map((place, i) => (
+                <PlaceCard key={place.id ?? `${place.latitude},${place.longitude},${i}`} place={place} index={i} saved={place.id ? savedIds.has(place.id) : false} selected={selectedId === place.id} onSelect={setSelectedId} onOpen={onOpenPlace} onAdd={pending.has(place.id) ? null : addPlace} onAddToDay={onAddToDay} />
+              ))}
             </ul>
           )}
           {status === 'success' && data.count > 0 && <DataCredit className="data-credit--inline" />}
