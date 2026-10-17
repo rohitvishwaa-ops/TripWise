@@ -13,8 +13,9 @@ export default function DestinationImage({
   className = '',
   priority = false,
   credit = false,
+  fallback,
 }) {
-  const image = useDestinationImage(city)
+  const image = useDestinationImage(city, fallback)
   const [failed, setFailed] = useState(false)
   const src = image?.[size]
   const showing = Boolean(src) && !failed

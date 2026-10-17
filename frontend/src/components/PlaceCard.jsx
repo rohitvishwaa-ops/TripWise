@@ -1,6 +1,7 @@
 import { CheckCircle, MapPin } from '@phosphor-icons/react'
 import { categoryLabels, formatCoordinates, placeName } from '../lib/format.js'
 import DestinationImage from './plan/DestinationImage.jsx'
+import { addressCity } from '../lib/destinationImage.js'
 
 export default function PlaceCard({ place, index, saved, onOpen }) {
   const tags = categoryLabels(place.categories)
@@ -10,6 +11,7 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
         city={placeName(place)}
         className="place-card__media"
         priority={index < 4}
+        fallback={addressCity(place.address)}
       />
       <div className="place-card__body">
       {tags.length > 0 && (

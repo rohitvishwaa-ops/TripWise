@@ -31,6 +31,14 @@ function storeResult(name, image) {
 // Wikimedia only serves thumbnails at standard widths (others return 400).
 const STANDARD_WIDTHS = [250, 330, 500, 960, 1280, 1920]
 
+export function addressCity(address) {
+  return address
+    ?.split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .at(-1)
+}
+
 function sizedUrl(summary, width) {
   const thumb = summary.thumbnail?.source
   if (!thumb) return null
@@ -79,22 +87,29 @@ function load(name) {
   return pending.get(name)
 }
 
-export function useDestinationImage(name) {
+export function useDestinationImage(name, fallbackName = '') {
   const key = name?.trim() || ''
+  const fallbackKey = fallbackName?.trim() || ''
   const [loaded, setLoaded] = useState({ key: '', image: null })
 
   useEffect(() => {
-    if (!key || results.has(key)) return undefined
+    if (!key || (results.has(key) && results.get(key))) return undefined
     let cancelled = false
     load(key).then((image) => {
-      if (!cancelled) setLoaded({ key, image })
+      if (image || !fallbackKey || fallbackKey === key) {
+        if (!cancelled) setLoaded({ key, image })
+        return
+      }
+      load(fallbackKey).then((fallbackImage) => {
+        if (!cancelled) setLoaded({ key, image: fallbackImage })
+      })
     })
     return () => {
       cancelled = true
     }
-  }, [key])
+  }, [key, fallbackKey])
 
   if (!key) return null
-  if (results.has(key)) return results.get(key)
+  if (results.has(key) && results.get(key)) return results.get(key)
   return loaded.key === key ? loaded.image : null
 }

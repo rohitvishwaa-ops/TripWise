@@ -10,6 +10,7 @@ import {
   placeName,
 } from '../lib/format.js'
 import DestinationImage from './plan/DestinationImage.jsx'
+import { addressCity } from '../lib/destinationImage.js'
 
 const supportsClosedBy =
   typeof HTMLDialogElement !== 'undefined' && 'closedBy' in HTMLDialogElement.prototype
@@ -123,7 +124,12 @@ export default function PlaceDialog({ place, onClose, onGoToTrip }) {
             {name}
           </h2>
 
-          <DestinationImage city={name} className="place-dialog__media" credit />
+          <DestinationImage
+            city={name}
+            fallback={addressCity(current.address)}
+            className="place-dialog__media"
+            credit
+          />
 
           <dl className="facts">
             <div>

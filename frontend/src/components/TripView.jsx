@@ -4,6 +4,7 @@ import { useTrip } from '../state/TripContext.jsx'
 import { useAnnounce } from '../state/Announcer.jsx'
 import { categoryLabels, formatCoordinates, formatDate, placeName } from '../lib/format.js'
 import DestinationImage from './plan/DestinationImage.jsx'
+import { addressCity } from '../lib/destinationImage.js'
 
 export default function TripView({ headingRef, onOpenPlace }) {
   const uid = useId()
@@ -109,7 +110,11 @@ export default function TripView({ headingRef, onOpenPlace }) {
                 <span className="trip-item__index" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <DestinationImage city={name} className="trip-item__media" />
+                <DestinationImage
+                  city={name}
+                  fallback={addressCity(place.address)}
+                  className="trip-item__media"
+                />
                 <div className="trip-item__main">
                   <h2 className="trip-item__title">
                     <button
