@@ -7,7 +7,7 @@
   rounded.
 */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
   --bg: #F7F3EB;
   --bg-deep: #D6C5A8;
@@ -74,8 +74,7 @@
   text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+[data-theme='dark'] {
     --bg: #20283A;
     --bg-deep: #171D2B;
     --surface: #293246;
@@ -110,7 +109,6 @@
     --backdrop: rgb(15 19 29 / 0.7);
     --spot: #7894D0;
     --spot-strength: 0.12;
-  }
 }
 
 *,

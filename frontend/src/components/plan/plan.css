@@ -1109,10 +1109,8 @@ a.saved-trip:hover .saved-trip__arrow {
   background: color-mix(in srgb, var(--danger) 85%, var(--ink));
 }
 
-@media (prefers-color-scheme: dark) {
-  .btn--danger-solid {
-    color: #1b0b09;
-  }
+[data-theme='dark'] .btn--danger-solid {
+  color: #1b0b09;
 }
 
 /* Add from My Trip */

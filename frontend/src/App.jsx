@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Compass, MagnifyingGlass, Path, Suitcase } from '@phosphor-icons/react'
+import { Compass, MagnifyingGlass, Moon, Path, Sun, Suitcase } from '@phosphor-icons/react'
 import ExploreView from './components/ExploreView.jsx'
 import TripView from './components/TripView.jsx'
 import PlanView from './components/plan/PlanView.jsx'
@@ -12,6 +12,19 @@ import { useHashRoute } from './state/useHashRoute.js'
 import './app.css'
 
 const TITLES = { explore: 'Explore | TripWise', trip: 'My Trip | TripWise', plan: 'Plan | TripWise' }
+const THEME_KEY = 'tripwise-theme'
+
+function readTheme() {
+  if (typeof document !== 'undefined' && document.documentElement.dataset.theme) {
+    return document.documentElement.dataset.theme
+  }
+  try {
+    const saved = localStorage.getItem(THEME_KEY)
+    return saved === 'dark' ? 'dark' : 'light'
+  } catch {
+    return 'light'
+  }
+}
 
 function Shell() {
   const { view, param } = useHashRoute()
@@ -23,7 +36,18 @@ function Shell() {
   const routeKey = param ? `${view}/${param}` : view
   const lastRoute = useRef(routeKey)
   const navRef = useRef(null)
+  const [theme, setTheme] = useState(readTheme)
   useGlide(navRef, view)
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', theme)
+    try {
+      localStorage.setItem(THEME_KEY, theme)
+    } catch {
+      // Private browsing can deny storage; the in-memory theme still works.
+    }
+  }, [theme])
 
   // SPA navigation: update the title and move focus to the new view's heading
   // (skipped on first load so the page doesn't steal focus). An opened trip
@@ -100,6 +124,17 @@ function Shell() {
               </li>
             </ul>
           </nav>
+          <button
+            type="button"
+            className="theme-toggle"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            aria-pressed={theme === 'dark'}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            onClick={() => setTheme((current) => (current === 'light' ? 'dark' : 'light'))}
+          >
+            {theme === 'light' ? <Moon aria-hidden="true" size={18} weight="bold" /> : <Sun aria-hidden="true" size={18} weight="bold" />}
+            <span className="visually-hidden">{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+          </button>
         </div>
       </header>
 

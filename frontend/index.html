@@ -4,11 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <link rel="preconnect" href="https://en.wikipedia.org" />
     <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin />
     <meta name="description" content="Discover places near any location and collect them in your trip." />
     <title>TripWise</title>
+    <script>
+      try {
+        const savedTheme = localStorage.getItem('tripwise-theme')
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          document.documentElement.dataset.theme = savedTheme
+          document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', savedTheme)
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
