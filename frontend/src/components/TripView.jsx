@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { ArrowClockwise, MapPin, Suitcase, Trash, WarningCircle } from '@phosphor-icons/react'
 import { useTrip } from '../state/TripContext.jsx'
 import { useAnnounce } from '../state/Announcer.jsx'
+import { useSpotlightAll } from './fx/useSpotlight.js'
 import { categoryLabels, formatCoordinates, formatDate, placeName } from '../lib/format.js'
 
 export default function TripView({ headingRef, onOpenPlace }) {
@@ -11,6 +12,8 @@ export default function TripView({ headingRef, onOpenPlace }) {
   const [rowError, setRowError] = useState(null) // { id, message }
   const pendingFocus = useRef(null)
   const titleRefs = useRef(new Map())
+  const listRef = useRef(null)
+  useSpotlightAll(listRef, '.trip-item', items)
 
   // After a removal, move focus to a neighbouring item (or the heading) so
   // keyboard users aren't dropped at the top of the document.
@@ -42,6 +45,9 @@ export default function TripView({ headingRef, onOpenPlace }) {
   return (
     <section className="trip" aria-labelledby={`${uid}-h1`}>
       <header className="trip__head">
+        <p className="eyebrow" aria-hidden="true">
+          Saved places
+        </p>
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           My Trip
         </h1>
@@ -94,13 +100,13 @@ export default function TripView({ headingRef, onOpenPlace }) {
       )}
 
       {status === 'ready' && count > 0 && (
-        <ol className="trip-list" role="list">
+        <ol className="trip-list" role="list" ref={listRef}>
           {items.map((place, index) => {
             const name = placeName(place)
             const busy = pending.has(place.id)
             const tags = categoryLabels(place.categories, 2)
             return (
-              <li key={place.id} className="trip-item">
+              <li key={place.id} className="trip-item spot">
                 <span className="trip-item__index" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>

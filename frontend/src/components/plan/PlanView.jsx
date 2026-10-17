@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useState } from 'react'
 import PlanForm from './PlanForm.jsx'
 import TripList from './TripList.jsx'
+import ContourField from '../fx/ContourField.jsx'
 import TripDetail, { TripDetailError, TripDetailSkeleton } from './TripDetail.jsx'
 import { getTrip, listTrips } from '../../lib/api.js'
 import { useTrip } from '../../state/TripContext.jsx'
@@ -124,6 +125,10 @@ export default function PlanView({ tripParam: rawParam, headingRef, active }) {
   return (
     <div className="plan">
       <section className="plan-intro" aria-labelledby={`${uid}-h1`}>
+        <ContourField className="contour-field--plan" />
+        <p className="eyebrow" aria-hidden="true">
+          Plan a trip
+        </p>
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           Plan your days, not your tabs.
         </h1>

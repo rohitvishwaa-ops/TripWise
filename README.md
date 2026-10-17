@@ -592,6 +592,7 @@ backend/
 frontend/src/
 ├── App.jsx              shell: header, nav, views, details dialog, footer
 ├── components/          ExploreView, SearchForm, PlaceCard, PlaceDialog, TripView, DataCredit
+├── components/fx/       visual effects: useSpotlight, useGlide (adapted from React Bits), ContourField
 ├── components/plan/     PlanView, PlanForm, CityRoute, TripList, TripDetail, DayCard, StopItem, AddSavedPlace, DestinationImage
 ├── state/               TripContext (My Trip), Announcer (live region), hash routing
 ├── lib/                 api.js (backend client), tripId.js, format.js, planOptions.js, destinationImage.js
@@ -685,3 +686,8 @@ powered by [Geoapify](https://www.geoapify.com/). The app shows this attribution
 next to search results, on trip pages and in the footer. Destination photos
 are lead images from [Wikipedia](https://www.wikipedia.org/) articles, linked
 to their source article.
+
+The card spotlight and the sliding navigation highlight are adapted from the
+free [React Bits](https://www.reactbits.dev/) components SpotlightCard and
+PillNav (© David Haz, MIT + Commons Clause); the notice is kept in
+`frontend/src/components/fx/`.

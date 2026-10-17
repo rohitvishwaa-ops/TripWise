@@ -5,6 +5,7 @@ import TripView from './components/TripView.jsx'
 import PlanView from './components/plan/PlanView.jsx'
 import PlaceDialog from './components/PlaceDialog.jsx'
 import DataCredit from './components/DataCredit.jsx'
+import { useGlide } from './components/fx/useGlide.js'
 import { TripProvider, useTrip } from './state/TripContext.jsx'
 import { AnnouncerProvider } from './state/Announcer.jsx'
 import { useHashRoute } from './state/useHashRoute.js'
@@ -21,6 +22,8 @@ function Shell() {
   const planHeading = useRef(null)
   const routeKey = param ? `${view}/${param}` : view
   const lastRoute = useRef(routeKey)
+  const navRef = useRef(null)
+  useGlide(navRef, view)
 
   // SPA navigation: update the title and move focus to the new view's heading
   // (skipped on first load so the page doesn't steal focus). An opened trip
@@ -50,11 +53,13 @@ function Shell() {
       <header className="site-header">
         <div className="site-header__inner">
           <a href="#explore" className="brand">
-            <Compass aria-hidden="true" size={26} weight="duotone" />
-            <span>TripWise</span>
+            <span className="brand__mark" aria-hidden="true">
+              <Compass size={22} weight="duotone" />
+            </span>
+            <span className="brand__name">TripWise</span>
           </a>
           <nav aria-label="Main">
-            <ul className="nav">
+            <ul className="nav" ref={navRef}>
               <li>
                 <a
                   href="#explore"

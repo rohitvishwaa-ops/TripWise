@@ -3,6 +3,7 @@ import { ArrowClockwise, MapTrifold, WarningCircle } from '@phosphor-icons/react
 import SearchForm from './SearchForm.jsx'
 import PlaceCard, { PlaceCardSkeleton } from './PlaceCard.jsx'
 import DataCredit from './DataCredit.jsx'
+import ContourField from './fx/ContourField.jsx'
 import { searchPlaces } from '../lib/api.js'
 import { formatCoordinates, formatDistanceKm } from '../lib/format.js'
 import { useTrip } from '../state/TripContext.jsx'
@@ -57,6 +58,10 @@ export default function ExploreView({ headingRef, onOpenPlace }) {
   return (
     <div className="explore">
       <section className="explore__intro" aria-labelledby={`${uid}-h1`}>
+        <ContourField />
+        <p className="eyebrow" aria-hidden="true">
+          Explore
+        </p>
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           Find places worth the trip.
         </h1>

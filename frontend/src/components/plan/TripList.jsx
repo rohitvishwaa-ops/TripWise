@@ -1,5 +1,7 @@
+import { useRef } from 'react'
 import { ArrowClockwise, ArrowRight, CalendarBlank, WarningCircle } from '@phosphor-icons/react'
 import DestinationImage from './DestinationImage.jsx'
+import { useSpotlightAll } from '../fx/useSpotlight.js'
 import { formatTripRange } from '../../lib/format.js'
 import { PACES } from '../../lib/planOptions.js'
 
@@ -7,6 +9,8 @@ const paceLabel = (value) => PACES.find((p) => p.value === value)?.label ?? valu
 
 export default function TripList({ state, onRetry, headingId }) {
   const { status, trips, error } = state
+  const listRef = useRef(null)
+  useSpotlightAll(listRef, '.saved-trip', trips)
 
   return (
     <section className="trip-list-panel" aria-labelledby={headingId} aria-busy={status === 'loading'}>
@@ -49,14 +53,14 @@ export default function TripList({ state, onRetry, headingId }) {
       )}
 
       {status === 'ready' && trips.length > 0 && (
-        <ul className="saved-trips" role="list">
+        <ul className="saved-trips" role="list" ref={listRef}>
           {trips.map((trip) => {
             const city = trip.city_names[0] ?? ''
             const places = trip.city_names.join(', ')
             const range = formatTripRange(trip.start_date, trip.end_date)
             return (
               <li key={trip.id}>
-                <a className="saved-trip" href={`#plan/${trip.id}`}>
+                <a className="saved-trip spot" href={`#plan/${trip.id}`}>
                   <DestinationImage city={city} className="saved-trip__media" />
                   <span className="saved-trip__body">
                     <span className="saved-trip__title">{trip.title}</span>
