@@ -199,7 +199,10 @@ body::before {
 @media (max-width: 420px) {
   .site-header__inner {
     gap: 4px;
+    padding-inline: 10px;
+    min-width: 0;
   }
+  .site-header__inner > nav { min-width: 0; }
   .brand__name {
     position: absolute;
     clip-path: inset(50%);
@@ -210,6 +213,13 @@ body::before {
   }
   .nav {
     padding: 3px;
+    max-width: 100%;
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+  .nav__link {
+    padding-inline: 8px;
+    font-size: 0.875rem;
   }
 }
 
