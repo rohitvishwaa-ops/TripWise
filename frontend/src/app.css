@@ -1477,6 +1477,35 @@ body::before {
   padding-block-end: 8px;
 }
 
+.trip__plans {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: color-mix(in srgb, var(--surface) 88%, var(--sea-soft));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.trip__section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.trip__section-head .eyebrow {
+  margin-block-end: 4px;
+}
+
+.trip__section-head .section-title {
+  margin: 0;
+}
+
+@media (max-width: 559px) {
+  .trip__plans { padding: 16px; }
+  .trip__section-head { align-items: start; flex-direction: column; }
+}
+
 .trip-list {
   position: relative;
   display: grid;

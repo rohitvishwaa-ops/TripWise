@@ -5,15 +5,29 @@ import { useAnnounce } from '../state/Announcer.jsx'
 import { categoryLabels, formatCoordinates, formatDate, placeName } from '../lib/format.js'
 import DestinationImage from './plan/DestinationImage.jsx'
 import { addressCity } from '../lib/destinationImage.js'
+import TripList from './plan/TripList.jsx'
+import { listTrips } from '../lib/api.js'
 
 export default function TripView({ headingRef, onOpenPlace }) {
   const uid = useId()
-  const { items, status, error, pending, remove, reload } = useTrip()
+  const { tripId, items, status, error, pending, remove, reload } = useTrip()
+  const [plans, setPlans] = useState({ status: 'loading', trips: [], error: null })
+  const [plansNonce, setPlansNonce] = useState(0)
   const announce = useAnnounce()
   const [rowError, setRowError] = useState(null) // { id, message }
   const pendingFocus = useRef(null)
   const titleRefs = useRef(new Map())
   const listRef = useRef(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    listTrips(tripId, { signal: controller.signal })
+      .then((data) => setPlans({ status: 'ready', trips: data.trips, error: null }))
+      .catch((err) => {
+        if (!controller.signal.aborted) setPlans((prev) => ({ ...prev, status: 'error', error: err }))
+      })
+    return () => controller.abort()
+  }, [tripId, plansNonce])
 
   // After a removal, move focus to a neighbouring item (or the heading) so
   // keyboard users aren't dropped at the top of the document.
@@ -59,6 +73,24 @@ export default function TripView({ headingRef, onOpenPlace }) {
           </p>
         )}
       </header>
+
+      <section className="trip__plans" aria-labelledby={`${uid}-plans`}>
+        <div className="trip__section-head">
+          <div>
+            <p className="eyebrow">Your itineraries</p>
+            <h2 id={`${uid}-plans`} className="section-title">Saved itineraries</h2>
+          </div>
+          <a className="btn btn--ghost btn--sm" href="#plan">Create a plan</a>
+        </div>
+        <TripList
+          state={plans}
+          onRetry={() => {
+            setPlans((prev) => ({ ...prev, status: 'loading', error: null }))
+            setPlansNonce((n) => n + 1)
+          }}
+          headingId={`${uid}-plan-list`}
+        />
+      </section>
 
       {status === 'loading' && (
         <ol className="trip-list" role="list" aria-busy="true">
