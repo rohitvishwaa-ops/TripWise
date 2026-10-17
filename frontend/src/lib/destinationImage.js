@@ -33,11 +33,16 @@ function storeResult(name, image) {
 const STANDARD_WIDTHS = [250, 330, 500, 960, 1280, 1920]
 
 export function addressCity(address) {
-  return address
+  const parts = address
     ?.split(',')
     .map((part) => part.trim())
     .filter(Boolean)
-    .at(-1)
+  if (!parts?.length) return undefined
+  // Geoapify addresses end with country and may include a postal code.
+  // Prefer the named locality immediately before the country.
+  const named = parts.filter((part) => /[A-Za-z]/.test(part) && !/^\d[\d -]*$/.test(part))
+  const locality = named.length > 1 ? named.at(-2) : named.at(-1)
+  return locality?.replace(/\s+\d[\d -]*$/, '').trim() || locality
 }
 
 function sizedUrl(summary, width) {
