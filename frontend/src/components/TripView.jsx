@@ -65,6 +65,7 @@ export default function TripView({ headingRef, onOpenPlace }) {
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           My Trip
         </h1>
+        <p className="editorial-script" aria-hidden="true">the places worth remembering</p>
         {status === 'ready' && (
           <p className="lede">
             {count === 0

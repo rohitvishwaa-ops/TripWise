@@ -92,7 +92,7 @@ kept in `localStorage`) and all saved data is scoped to it.
 | Frontend framework | React 19.3 (JavaScript, JSX) |
 | Build tool / dev server | Vite 8.3 with `@vitejs/plugin-react` |
 | Styling | Plain CSS with design tokens (no CSS framework) |
-| Icons and font | `@phosphor-icons/react` 2.1, `@fontsource-variable/bricolage-grotesque` 5.3 (self-hosted) |
+| Icons and fonts | `@phosphor-icons/react` 2.1; self-hosted `@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/playfair-display`, and `@fontsource-variable/caveat` |
 | Frontend linting | oxlint 1.88 |
 | Backend framework | FastAPI 0.143 (Python 3.11) with Pydantic 2.14 for validation |
 | ASGI server | Uvicorn 0.54 |
@@ -113,6 +113,18 @@ TripWise/
 
 The browser only talks to the TripWise backend; the backend talks to Geoapify
 and Neon. API keys and the database URL never reach the frontend.
+
+### Typography and font licences
+
+TripWise uses Bricolage Grotesque for interface text, Playfair Display for
+editorial headings, and Caveat for short decorative captions. The font files
+are bundled locally through Fontsource, so normal page loads do not depend on a
+remote font request. These families are distributed under the SIL Open Font
+License; the package licence files are kept in `frontend/node_modules` after
+installation and the upstream notices are available at
+https://fontsource.org/fonts/bricolage-grotesque,
+https://fontsource.org/fonts/playfair-display, and
+https://fontsource.org/fonts/caveat.
 
 ## Setup
 

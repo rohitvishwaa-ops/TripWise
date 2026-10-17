@@ -71,6 +71,7 @@ export default function ExploreView({ headingRef, onOpenPlace, onAddToDay }) {
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           Find places worth the trip.
         </h1>
+        <p className="editorial-script" aria-hidden="true">field notes for going well</p>
         <p className="lede">
           Search any city or place, filter by what you love, and save favorites to My Trip.
         </p>

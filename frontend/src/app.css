@@ -331,11 +331,40 @@ body::before {
 /* ---------- Type ---------- */
 
 .display {
-  font-size: clamp(2.3rem, 1.4rem + 3.2vw, 4rem);
-  font-weight: 790;
-  letter-spacing: -0.045em;
-  line-height: 0.98;
+  font-family: var(--font-display);
+  font-size: var(--type-display-xl);
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
   scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+h1,
+h2,
+h3,
+h4,
+.section-title,
+.place-card__title,
+.place-dialog__title,
+.saved-trip__title,
+.trip-item__title,
+.plan-form__title,
+.day-card__theme {
+  font-family: var(--font-display);
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-heading);
+}
+
+.section-title { font-size: var(--type-heading); }
+
+.editorial-script {
+  font-family: var(--font-script);
+  font-size: 1.25rem;
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--accent-ink);
 }
 
 /* Small uppercase label above a heading, like a map legend. */
@@ -347,7 +376,7 @@ body::before {
   color: var(--sea-ink);
   font-size: 0.78rem;
   font-weight: 750;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
@@ -1183,7 +1212,7 @@ body::before {
 }
 
 .place-card__title {
-  font-size: 1.25rem;
+  font-size: clamp(1.2rem, 1.05rem + 0.35vw, 1.45rem);
   font-weight: 750;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -1514,10 +1543,11 @@ body::before {
 }
 
 .place-dialog__title {
-  font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.3rem);
-  font-weight: 790;
-  letter-spacing: -0.035em;
-  line-height: 1.05;
+  font-family: var(--font-display);
+  font-size: var(--type-display-lg);
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
 }
 
 .place-dialog__media {
@@ -1761,9 +1791,10 @@ body::before {
 }
 
 .trip-item__title {
-  font-size: 1.25rem;
-  font-weight: 750;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
 }
 
 .trip-item__address {

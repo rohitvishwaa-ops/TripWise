@@ -130,6 +130,7 @@ export default function PlanView({ tripParam: rawParam, headingRef, active }) {
         <h1 id={`${uid}-h1`} ref={headingRef} tabIndex={-1} className="display">
           Plan your days, not your tabs.
         </h1>
+        <p className="editorial-script" aria-hidden="true">route notes, thoughtfully arranged</p>
         <p className="lede">
           Pick a city, how long you have and what you enjoy. TripWise arranges real nearby places into a
           day-by-day plan you can come back to.

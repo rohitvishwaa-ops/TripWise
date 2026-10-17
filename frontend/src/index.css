@@ -47,6 +47,16 @@
 
   --font: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, sans-serif;
+  --font-display: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
+  --font-script: 'Caveat Variable', 'Segoe Print', 'Bradley Hand', cursive;
+  --type-display-xl: clamp(2.45rem, 1.55rem + 3.5vw, 4.35rem);
+  --type-display-lg: clamp(2rem, 1.45rem + 2.2vw, 3.2rem);
+  --type-heading: clamp(1.35rem, 1.15rem + 0.7vw, 1.8rem);
+  --type-body: 1rem;
+  --leading-display: 0.98;
+  --leading-heading: 1.12;
+  --tracking-display: -0.035em;
+  --tracking-label: 0.14em;
   --radius-control: 12px;
   --radius-card: 20px;
   --radius-pill: 999px;
