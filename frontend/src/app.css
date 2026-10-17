@@ -223,6 +223,31 @@ body::before {
   }
 }
 
+@media (max-width: 760px) {
+  .site-header__inner {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+  .brand__name {
+    position: absolute;
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .site-header__inner > nav,
+  .nav {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .nav__link {
+    padding-inline: 7px;
+    font-size: 0.82rem;
+  }
+  .nav__link > svg { display: none; }
+}
+
 @media (max-width: 340px) {
   .nav__link {
     padding-inline: 8px;
