@@ -206,7 +206,14 @@ export default function TripDetail({ trip, warnings, headingRef, onTripChange })
       </a>
 
       <header className="trip-hero">
-        <DestinationImage city={cityName} size="large" className="trip-hero__media" priority credit />
+        <DestinationImage
+          city={cityName}
+          size="large"
+          className="trip-hero__media"
+          priority
+          credit
+          alt={`Photo of ${cityName}`}
+        />
         <div className="trip-hero__content">
           {multiCity ? (
             <p className="trip-hero__city trip-hero__route">

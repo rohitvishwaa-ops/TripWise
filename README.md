@@ -284,9 +284,9 @@ Searches the Geoapify Places API around a point.
 | `latitude`   | yes      |             | -90 to 90                                                    |
 | `longitude`  | yes      |             | -180 to 180                                                  |
 | `radius`     | no       | `5000`      | meters, 1 to 50000                                           |
-| `categories` | no       | `tourism`   | comma-separated [Geoapify categories](https://apidocs.geoapify.com/docs/places/#categories), max 20 |
+| `categories` | no       | `tourism.attraction,tourism.sights,heritage,leisure.park,natural` | comma-separated [Geoapify categories](https://apidocs.geoapify.com/docs/places/#categories), max 20 |
 | `limit`      | no       | `20`        | 1 to 100                                                     |
-| `sort`       | no       | `relevance` | `relevance` (provider order), `name`, `name_desc`; unnamed places go last |
+| `sort`       | no       | `relevance` | `relevance` (provider order), `name`, `name_desc`; only named visitor places are returned |
 
 Example:
 
@@ -313,10 +313,11 @@ curl "http://localhost:8000/api/places?latitude=48.8566&longitude=2.3522&radius=
 Errors: `422` invalid input, `400` provider rejected the request (e.g. unknown
 category), `503` key not configured or provider rate limit, `504` provider
 timeout, `502` provider unreachable or other provider error. An empty search
-returns `200` with `{"count": 0, "places": []}`.
+returns `200` with `{"count": 0, "places": []}`. Blank or generic names and
+obvious unrelated amenities are filtered before the response is returned.
 
 Name sorting ignores case and accents (`À la mémoire` sorts with `A`, `Église`
-with `E`); places without a name are listed last.
+with `E`); only named, deduplicated visitor places are included.
 
 ### `GET /api/geocode` — find a location by name
 

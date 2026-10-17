@@ -21,7 +21,7 @@ for _noisy in ("httpx", "httpcore"):
     logging.getLogger(_noisy).setLevel(logging.WARNING)
 
 GEOAPIFY_PLACES_URL = "https://api.geoapify.com/v2/places"
-DEFAULT_CATEGORIES = "tourism"
+DEFAULT_CATEGORIES = "tourism.attraction,tourism.sights,heritage,leisure.park,natural"
 MAX_CATEGORIES = 20
 CATEGORY_PATTERN = re.compile(r"^[a-z0-9_]+(\.[a-z0-9_]+)*$")
 REQUEST_TIMEOUT = httpx.Timeout(10.0)
@@ -41,6 +41,58 @@ class Place(BaseModel):
 class PlacesResponse(BaseModel):
     count: int
     places: list[Place]
+
+
+GENERIC_NAMES = {
+    "artwork",
+    "attraction",
+    "landmark",
+    "monument",
+    "point of interest",
+    "poi",
+    "place of interest",
+    "sculpture",
+    "statue",
+    "tourist attraction",
+    "unknown",
+    "unnamed",
+    "unnamed attraction",
+    "untitled",
+}
+IRRELEVANT_NAME_PARTS = (
+    "supermarket",
+    "pharmacy",
+    "restaurant",
+    "cafe",
+    "hotel",
+    "salon",
+)
+
+
+def is_useful_place(place: Place) -> bool:
+    name = " ".join((place.name or "").split()).strip()
+    if not name:
+        return False
+    normalized = re.sub(r"[^a-z0-9 ]+", " ", name.casefold()).strip()
+    if normalized in GENERIC_NAMES or normalized.startswith("unnamed "):
+        return False
+    if any(part in normalized for part in IRRELEVANT_NAME_PARTS):
+        return False
+    return True
+
+
+def filter_places(places: list[Place], limit: int) -> list[Place]:
+    useful: list[Place] = []
+    seen: set[tuple[str, str]] = set()
+    for place in places:
+        if not is_useful_place(place):
+            continue
+        key = (place.id or "", f"{place.latitude:.5f},{place.longitude:.5f}")
+        if key in seen:
+            continue
+        seen.add(key)
+        useful.append(place)
+    return useful[:limit]
 
 
 def get_api_key() -> str:
@@ -158,9 +210,8 @@ def sort_places(places: list[Place], sort: str) -> list[Place]:
     if sort == "relevance":
         return places
     named = [p for p in places if p.name and p.name.strip()]
-    unnamed = [p for p in places if not (p.name and p.name.strip())]
     named.sort(key=lambda p: name_sort_key(p.name), reverse=(sort == "name_desc"))
-    return named + unnamed
+    return named
 
 
 async def fetch_places(
@@ -216,14 +267,33 @@ async def list_places(
     api_key: str = Depends(get_api_key),
     client: httpx.AsyncClient = Depends(get_http_client),
 ):
+    parsed_categories = parse_categories(categories)
+    provider_limit = min(max(limit * 2, 20), 100)
     places = await fetch_places(
         client,
         api_key,
         latitude=latitude,
         longitude=longitude,
         radius=radius,
-        categories=parse_categories(categories),
-        limit=limit,
+        categories=parsed_categories,
+        limit=provider_limit,
     )
+    places = filter_places(places, limit)
+
+    # A sparse first pass is common in cities whose OSM attraction coverage is
+    # concentrated in a historic core. Broaden only the same attraction
+    # categories and keep the geographic center; never substitute businesses.
+    if len(places) < min(limit, 3) and radius < 20000:
+        broadened = await fetch_places(
+            client,
+            api_key,
+            latitude=latitude,
+            longitude=longitude,
+            radius=min(radius * 2, 20000),
+            categories=parsed_categories,
+            limit=provider_limit,
+        )
+        places = filter_places(places + broadened, limit)
+
     places = sort_places(places, sort)
     return PlacesResponse(count=len(places), places=places)

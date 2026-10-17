@@ -14,6 +14,7 @@ export default function DestinationImage({
   priority = false,
   credit = false,
   fallback,
+  alt = '',
 }) {
   const image = useDestinationImage(city, fallback)
   const [failed, setFailed] = useState(false)
@@ -26,7 +27,7 @@ export default function DestinationImage({
         {showing ? (
           <img
             src={src}
-            alt=""
+            alt={alt}
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : undefined}
             decoding="async"

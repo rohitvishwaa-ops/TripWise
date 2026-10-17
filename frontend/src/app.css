@@ -1658,3 +1658,86 @@ body::before {
   color: var(--ink-3);
   font-size: 0.8125rem;
 }
+
+/* ---------- Premium Ocean surface system ---------- */
+
+.explore__intro,
+.plan-intro,
+.trip__head {
+  padding: 28px 32px 32px;
+  margin-block-end: 28px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--sea-soft) 72%, transparent), transparent 62%),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.explore__intro .display,
+.plan-intro .display,
+.trip__head .display {
+  max-width: 18ch;
+  font-size: clamp(2rem, 1.45rem + 2.4vw, 3.35rem);
+  line-height: 1;
+}
+
+.explore__layout,
+.plan__layout {
+  gap: 28px;
+}
+
+.search-form,
+.plan-form,
+.trip__plans,
+.day-card,
+.trip-item,
+.place-card,
+.saved-trip {
+  border-color: color-mix(in srgb, var(--sea) 24%, var(--line));
+  box-shadow: var(--shadow-sm);
+}
+
+.search-form:focus-within,
+.plan-form:focus-within {
+  box-shadow: var(--shadow);
+}
+
+.place-card {
+  border-radius: 18px;
+}
+
+.place-card:not(.place-card--skeleton):hover,
+.trip-item:hover,
+a.saved-trip:hover {
+  transform: translateY(-2px);
+  border-color: var(--sea);
+  box-shadow: var(--shadow);
+}
+
+.place-card__media {
+  border-radius: 17px 17px 0 0;
+}
+
+.btn--primary {
+  background: var(--accent);
+  box-shadow: 4px 5px 10px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.btn--primary:hover {
+  background: var(--accent-ink);
+}
+
+.nav {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 639px) {
+  .explore__intro,
+  .plan-intro,
+  .trip__head {
+    padding: 22px 18px 24px;
+    border-radius: 22px;
+  }
+}

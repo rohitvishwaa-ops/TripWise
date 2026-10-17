@@ -8,6 +8,8 @@ const CATEGORIES = [
   { value: 'tourism.sights', label: 'Sights' },
   { value: 'tourism.attraction', label: 'Attractions' },
   { value: 'entertainment.museum', label: 'Museums' },
+  { value: 'heritage', label: 'Heritage' },
+  { value: 'tourism.attraction.viewpoint', label: 'Viewpoints' },
   { value: 'leisure.park', label: 'Parks' },
   { value: 'natural', label: 'Nature' },
   { value: 'beach', label: 'Beaches' },

@@ -56,7 +56,7 @@ export default function TripList({ state, onRetry, headingId }) {
             return (
               <li key={trip.id}>
                 <a className="saved-trip" href={`#plan/${trip.id}`}>
-                  <DestinationImage city={city} className="saved-trip__media" />
+                  <DestinationImage city={city} className="saved-trip__media" alt={`Photo of ${city}`} />
                   <span className="saved-trip__body">
                     <span className="saved-trip__title">{trip.title}</span>
                     <span className="saved-trip__meta">

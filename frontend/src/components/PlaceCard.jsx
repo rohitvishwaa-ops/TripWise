@@ -12,6 +12,7 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
         className="place-card__media"
         priority={index < 4}
         fallback={addressCity(place.address)}
+        alt={`Photo of ${placeName(place)}`}
       />
       <div className="place-card__body">
       {tags.length > 0 && (

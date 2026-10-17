@@ -146,6 +146,7 @@ export default function TripView({ headingRef, onOpenPlace }) {
                   city={name}
                   fallback={addressCity(place.address)}
                   className="trip-item__media"
+                  alt={`Photo of ${name}`}
                 />
                 <div className="trip-item__main">
                   <h2 className="trip-item__title">

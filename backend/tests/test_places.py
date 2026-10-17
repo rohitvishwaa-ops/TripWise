@@ -78,7 +78,7 @@ def test_returns_normalized_places(client, mock_upstream):
     res = client.get("/api/places", params={**PARIS, "radius": 3000})
     assert res.status_code == 200
     body = res.json()
-    assert body["count"] == 4
+    assert body["count"] == 3
     first = body["places"][0]
     assert first == {
         "id": "p1",
@@ -88,9 +88,7 @@ def test_returns_normalized_places(client, mock_upstream):
         "longitude": 2.2945,
         "categories": ["tourism.sights"],
     }
-    unnamed = next(p for p in body["places"] if p["id"] == "p3")
-    assert unnamed["name"] is None
-    assert unnamed["address"] == "12 Rue X, Paris"
+    assert all(place["name"].strip() for place in body["places"])
 
 
 def test_builds_upstream_query(client, mock_upstream):
@@ -104,7 +102,7 @@ def test_builds_upstream_query(client, mock_upstream):
     assert query["filter"] == ["circle:2.3522,48.8566,1500"]
     assert query["bias"] == ["proximity:2.3522,48.8566"]
     assert query["categories"] == ["catering.restaurant,tourism"]
-    assert query["limit"] == ["5"]
+    assert query["limit"] == ["20"]
     assert query["apiKey"] == [FAKE_KEY]
 
 
@@ -112,17 +110,19 @@ def test_default_category(client, mock_upstream):
     _, captured = mock_upstream
     client.get("/api/places", params=PARIS)
     query = parse_qs(urlparse(str(captured[0].url)).query)
-    assert query["categories"] == ["tourism"]
+    assert query["categories"] == [
+        "tourism.attraction,tourism.sights,heritage,leisure.park,natural"
+    ]
 
 
 def test_sort_by_name(client, mock_upstream):
     names = [p["name"] for p in client.get("/api/places", params={**PARIS, "sort": "name"}).json()["places"]]
-    assert names == ["Arc de Triomphe", "eiffel Tower", "Louvre Museum", None]
+    assert names == ["Arc de Triomphe", "eiffel Tower", "Louvre Museum"]
 
 
 def test_sort_by_name_desc(client, mock_upstream):
     names = [p["name"] for p in client.get("/api/places", params={**PARIS, "sort": "name_desc"}).json()["places"]]
-    assert names == ["Louvre Museum", "eiffel Tower", "Arc de Triomphe", None]
+    assert names == ["Louvre Museum", "eiffel Tower", "Arc de Triomphe"]
 
 
 def test_empty_results(client, mock_upstream):
@@ -131,6 +131,24 @@ def test_empty_results(client, mock_upstream):
     res = client.get("/api/places", params=PARIS)
     assert res.status_code == 200
     assert res.json() == {"count": 0, "places": []}
+
+
+def test_filters_generic_and_irrelevant_names(client, mock_upstream):
+    state, _ = mock_upstream
+    state["handler"] = lambda r: httpx.Response(
+        200,
+        json={
+            "features": [
+                feature("blank", None, 1, 1),
+                feature("generic", "Sculpture", 1, 1),
+                feature("business", "Central Supermarket", 1, 1),
+                feature("named", "Dubai Spice Souq", 1, 1),
+            ]
+        },
+    )
+    response = client.get("/api/places", params={**PARIS, "limit": 10})
+    assert response.status_code == 200
+    assert [place["name"] for place in response.json()["places"]] == ["Dubai Spice Souq"]
 
 
 def test_skips_features_without_coordinates(client, mock_upstream):
@@ -270,8 +288,6 @@ def test_name_sort_ignores_accents_and_case(client, mock_upstream):
         "m-acute",  # Mémorial
         "m-plain",  # Mur
         "z",
-        "blank",  # unnamed (blank/missing) stay last, in provider order
-        "none",
     ]
 
 
@@ -285,14 +301,16 @@ def test_name_desc_ignores_accents_and_case(client, mock_upstream):
         "e-plain",
         "e-acute",
         "a-grave",
-        "blank",
-        "none",
     ]
 
 
 def test_relevance_keeps_provider_order(client, mock_upstream):
     ids = sorted_ids(client, mock_upstream, "relevance")
-    assert ids == [f["properties"]["place_id"] for f in ACCENTED["features"]]
+    assert ids == [
+        f["properties"]["place_id"]
+        for f in ACCENTED["features"]
+        if f["properties"].get("name", "").strip()
+    ]
 
 
 @pytest.mark.parametrize(

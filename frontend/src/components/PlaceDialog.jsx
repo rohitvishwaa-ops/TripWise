@@ -129,6 +129,7 @@ export default function PlaceDialog({ place, onClose, onGoToTrip }) {
             fallback={addressCity(current.address)}
             className="place-dialog__media"
             credit
+            alt={`Photo of ${name}`}
           />
 
           <dl className="facts">
