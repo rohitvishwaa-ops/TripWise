@@ -40,7 +40,7 @@ export default function DestinationImage({
       </div>
       {credit && showing && image.pageUrl && (
         <a className="image-credit" href={image.pageUrl} target="_blank" rel="noopener noreferrer">
-          Photo: Wikipedia
+          {image.creditLabel ?? 'Photo: Wikipedia'}
           <span className="visually-hidden"> article about {image.title} (opens in a new tab)</span>
         </a>
       )}

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 // fails, callers show a styled placeholder instead. Cached per page session.
 
 const SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/'
+const COMMONS_API = 'https://commons.wikimedia.org/w/api.php'
 const results = new Map() // name -> image | null
 const pending = new Map() // name -> Promise
 const STORAGE_KEY = 'tripwise.destination-images.v1'
@@ -53,14 +54,45 @@ async function fetchImage(name) {
   const res = await fetch(SUMMARY_URL + encodeURIComponent(name.replaceAll(' ', '_')), {
     headers: { Accept: 'application/json' },
   })
-  if (!res.ok) return null
-  const summary = await res.json()
-  if (summary.type !== 'standard' || !summary.thumbnail) return null
+  if (res.ok) {
+    const summary = await res.json()
+    if (summary.type === 'standard' && summary.thumbnail) {
+      return {
+        large: sizedUrl(summary, 1280),
+        small: sizedUrl(summary, 500),
+        pageUrl: summary.content_urls?.desktop?.page ?? null,
+        title: summary.title,
+        creditLabel: 'Photo: Wikipedia',
+      }
+    }
+  }
+
+  // Generic place names often have no article. Search Commons for a real
+  // destination image before showing the quiet initial fallback.
+  const params = new URLSearchParams({
+    action: 'query',
+    generator: 'search',
+    gsrsearch: name,
+    gsrnamespace: '6',
+    gsrlimit: '1',
+    prop: 'imageinfo',
+    iiprop: 'url|extmetadata',
+    iiurlwidth: '960',
+    format: 'json',
+    origin: '*',
+  })
+  const commons = await fetch(`${COMMONS_API}?${params}`)
+  if (!commons.ok) return null
+  const data = await commons.json()
+  const page = Object.values(data.query?.pages ?? {})[0]
+  const info = page?.imageinfo?.[0]
+  if (!info?.thumburl && !info?.url) return null
   return {
-    large: sizedUrl(summary, 1280),
-    small: sizedUrl(summary, 500),
-    pageUrl: summary.content_urls?.desktop?.page ?? null,
-    title: summary.title,
+    large: info.thumburl ?? info.url,
+    small: info.thumburl ?? info.url,
+    pageUrl: info.descriptionurl ?? null,
+    title: page.title,
+    creditLabel: 'Photo: Wikimedia Commons',
   }
 }
 
