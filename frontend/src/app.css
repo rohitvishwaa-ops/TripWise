@@ -1612,12 +1612,42 @@ body::before {
   }
 }
 
+/* Layout balance: keep filters compact, then let results own the page width. */
+@media (min-width: 960px) {
+  .explore__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .explore__panel,
+  .results {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .explore__panel { position: static; }
+
+  .search-form {
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 1fr);
+    align-items: start;
+    gap: 18px 24px;
+  }
+
+  .search-form > .field-group:first-child { grid-row: span 3; }
+  .search-form > .field-group:nth-child(2),
+  .search-form > .field.field--inline,
+  .search-form > .btn { grid-column: 2; }
+  .search-form > .field.field--inline { align-self: end; }
+  .search-form > .btn { align-self: end; }
+}
+
 /* ---------- My Trip ---------- */
 
 .trip {
   display: grid;
   gap: 32px;
-  max-width: 860px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .trip__head {
