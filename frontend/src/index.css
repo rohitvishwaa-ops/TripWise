@@ -1,7 +1,7 @@
 /*
   TripWise design tokens: "Field Atlas".
-  Warm survey-paper neutrals and deep ink, with two restrained accents: rust
-  (primary actions, route markers) and sea teal (labels, secondary cues).
+  Porcelain & Midnight: editorial ivory surfaces, ink typography, cobalt
+  navigation cues, and a restrained burnt-coral action colour.
   Every text/background pair is checked for WCAG AA in both color schemes.
   Shape rule: controls 12px, cards 20px, chips, badges and nav pills fully
   rounded.
@@ -9,36 +9,40 @@
 :root {
   color-scheme: light dark;
 
-  --bg: #eef3f1;
-  --bg-deep: #dbe8e5;
-  --surface: #f8fbf8;
-  --surface-2: #e4efec;
-  --ink: #092934;
-  --ink-2: #36525a;
-  --ink-3: #587078;
-  --line: #c8dbd8;
-  --line-strong: #719099;
-  --accent: #d86f50;
-  --on-accent: #fffaf4;
-  --accent-ink: #a84c35;
-  --accent-soft: #f7ded3;
-  --sea: #087d7c;
-  --on-sea: #f3fffd;
-  --sea-ink: #066363;
-  --sea-soft: #d5ece8;
-  --contour: rgb(27 36 32 / 0.075);
-  --grid: rgb(27 36 32 / 0.045);
-  --ok: #1c6643;
-  --ok-soft: #dcefe2;
-  --danger: #b0231a;
-  --danger-soft: #fbe5e1;
-  --warn: #774b00;
-  --warn-soft: #f9edd2;
-  --shadow-sm: 5px 5px 12px rgb(25 68 75 / 0.1), -4px -4px 10px rgb(255 255 255 / 0.76);
-  --shadow: 8px 10px 24px -12px rgb(25 68 75 / 0.28), -5px -5px 16px rgb(255 255 255 / 0.72);
-  --shadow-lg: 14px 18px 36px -18px rgb(25 68 75 / 0.32), -8px -8px 20px rgb(255 255 255 / 0.66);
-  --backdrop: rgb(16 20 18 / 0.55);
-  --spot: #b5400f;
+  --bg: #F7F3EB;
+  --bg-deep: #EDE5D8;
+  --surface: #FFFDF8;
+  --surface-2: #EFE7DA;
+  --ink: #20283A;
+  --ink-2: #4B556B;
+  --ink-3: #687286;
+  --line: #DED5C7;
+  --line-strong: #A99F90;
+  --accent: #D96F56;
+  --on-accent: #FFF8F1;
+  --accent-ink: #B85642;
+  --accent-soft: #F4DDD4;
+  /* Legacy --sea names remain as aliases while the visual system speaks cobalt. */
+  --cobalt: #4263A8;
+  --cobalt-ink: #2F4E8D;
+  --cobalt-soft: #E0E7F7;
+  --sea: var(--cobalt);
+  --on-sea: #F5F7FF;
+  --sea-ink: var(--cobalt-ink);
+  --sea-soft: var(--cobalt-soft);
+  --contour: rgb(32 40 58 / 0.055);
+  --grid: rgb(32 40 58 / 0.035);
+  --ok: #336B57;
+  --ok-soft: #DDEBE3;
+  --danger: #B23A37;
+  --danger-soft: #F8E4E0;
+  --warn: #7A5717;
+  --warn-soft: #F6EBD0;
+  --shadow-sm: 5px 5px 12px rgb(32 40 58 / 0.1), -4px -4px 10px rgb(255 255 255 / 0.8);
+  --shadow: 8px 10px 24px -12px rgb(32 40 58 / 0.22), -5px -5px 16px rgb(255 255 255 / 0.72);
+  --shadow-lg: 14px 18px 36px -18px rgb(32 40 58 / 0.28), -8px -8px 20px rgb(255 255 255 / 0.66);
+  --backdrop: rgb(32 40 58 / 0.55);
+  --spot: #4263A8;
   --spot-strength: 0.1;
 
   --font: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
@@ -72,36 +76,39 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #071d28;
-    --bg-deep: #061620;
-    --surface: #0d2b36;
-    --surface-2: #123b47;
-    --ink: #f4f0e5;
-    --ink-2: #c6d4d3;
-    --ink-3: #9cb5b8;
-    --line: #23505b;
-    --line-strong: #5d8790;
-    --accent: #ff9472;
-    --on-accent: #28130f;
-    --accent-ink: #ffb095;
-    --accent-soft: #4b2a25;
-    --sea: #68d2c5;
-    --on-sea: #062320;
-    --sea-ink: #8be2d8;
-    --sea-soft: #16434b;
-    --contour: rgb(237 231 219 / 0.07);
-    --grid: rgb(237 231 219 / 0.04);
-    --ok: #74d3a3;
-    --ok-soft: #173328;
-    --danger: #ff8f80;
-    --danger-soft: #3b1b18;
-    --warn: #f3c46b;
-    --warn-soft: #36290f;
-    --shadow-sm: 5px 5px 12px rgb(0 0 0 / 0.28), -4px -4px 10px rgb(34 82 93 / 0.3);
-    --shadow: 9px 11px 25px -12px rgb(0 0 0 / 0.5), -5px -5px 14px rgb(34 82 93 / 0.26);
-    --shadow-lg: 15px 18px 38px -18px rgb(0 0 0 / 0.58), -8px -8px 18px rgb(34 82 93 / 0.2);
-    --backdrop: rgb(4 7 6 / 0.7);
-    --spot: #ef8a4c;
+    --bg: #20283A;
+    --bg-deep: #171D2B;
+    --surface: #293246;
+    --surface-2: #323D54;
+    --ink: #F7F3EB;
+    --ink-2: #D6D0C4;
+    --ink-3: #B4B0A8;
+    --line: #46526A;
+    --line-strong: #74809A;
+    --accent: #D96F56;
+    --on-accent: #2B1A18;
+    --accent-ink: #F3A08C;
+    --accent-soft: #4B3030;
+    --cobalt: #7894D0;
+    --cobalt-ink: #B2C3ED;
+    --cobalt-soft: #33415F;
+    --sea: var(--cobalt);
+    --on-sea: #111A2B;
+    --sea-ink: var(--cobalt-ink);
+    --sea-soft: var(--cobalt-soft);
+    --contour: rgb(247 243 235 / 0.065);
+    --grid: rgb(247 243 235 / 0.035);
+    --ok: #8BC5A5;
+    --ok-soft: #244237;
+    --danger: #F08B82;
+    --danger-soft: #542825;
+    --warn: #E8C77B;
+    --warn-soft: #4A3A1C;
+    --shadow-sm: 5px 5px 12px rgb(0 0 0 / 0.28), -4px -4px 10px rgb(83 98 128 / 0.18);
+    --shadow: 9px 11px 25px -12px rgb(0 0 0 / 0.5), -5px -5px 14px rgb(83 98 128 / 0.18);
+    --shadow-lg: 15px 18px 38px -18px rgb(0 0 0 / 0.58), -8px -8px 18px rgb(83 98 128 / 0.14);
+    --backdrop: rgb(15 19 29 / 0.7);
+    --spot: #7894D0;
     --spot-strength: 0.12;
   }
 }

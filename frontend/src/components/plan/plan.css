@@ -377,7 +377,7 @@ a.saved-trip:hover .saved-trip__arrow {
 
 /* ---------- Destination image ---------- */
 
-/* Placeholder (no photo): a dark relief map with contour rings. */
+/* Placeholder (no photo): a quiet midnight relief map with contour rings. */
 .dest-image {
   position: relative;
   overflow: hidden;
@@ -388,7 +388,7 @@ a.saved-trip:hover .saved-trip__arrow {
       rgb(255 250 240 / 0.09) 14px 15px
     ),
     radial-gradient(circle at 72% 28%, color-mix(in srgb, var(--accent) 50%, transparent), transparent 62%),
-    linear-gradient(140deg, #173c3a, #22302b 60%, #2f3a33);
+    linear-gradient(140deg, #20283A, #2B354B 60%, #3A465D);
 }
 
 .dest-image img {

@@ -224,6 +224,25 @@ body::before {
 }
 
 @media (max-width: 760px) {
+  .page,
+  .page > *,
+  .explore,
+  .explore__layout,
+  .explore__intro,
+  .plan,
+  .plan__layout,
+  .trip,
+  .search-form,
+  .plan-form {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .display,
+  .section-title,
+  .lede {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
   .site-header__inner {
     min-width: 0;
     padding-inline: 10px;
