@@ -8,6 +8,25 @@ import { useEffect, useState } from 'react'
 const SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/'
 const results = new Map() // name -> image | null
 const pending = new Map() // name -> Promise
+const STORAGE_KEY = 'tripwise.destination-images.v1'
+
+function readStored() {
+  try {
+    return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}')
+  } catch {
+    return {}
+  }
+}
+
+function storeResult(name, image) {
+  try {
+    const stored = readStored()
+    stored[name] = image
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored))
+  } catch {
+    // Storage can be unavailable in private browsing; memory caching still works.
+  }
+}
 
 // Wikimedia only serves thumbnails at standard widths (others return 400).
 const STANDARD_WIDTHS = [250, 330, 500, 960, 1280, 1920]
@@ -38,6 +57,12 @@ async function fetchImage(name) {
 }
 
 function load(name) {
+  if (results.has(name)) return Promise.resolve(results.get(name))
+  const stored = readStored()
+  if (Object.hasOwn(stored, name)) {
+    results.set(name, stored[name])
+    return Promise.resolve(stored[name])
+  }
   if (!pending.has(name)) {
     pending.set(
       name,
@@ -45,6 +70,7 @@ function load(name) {
         .catch(() => null)
         .then((image) => {
           results.set(name, image)
+          storeResult(name, image)
           pending.delete(name)
           return image
         }),

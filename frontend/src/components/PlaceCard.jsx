@@ -6,7 +6,11 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
   const tags = categoryLabels(place.categories)
   return (
     <li className="place-card" style={{ '--i': Math.min(index, 12) }}>
-      <DestinationImage city={placeName(place)} className="place-card__media" />
+      <DestinationImage
+        city={placeName(place)}
+        className="place-card__media"
+        priority={index < 4}
+      />
       <div className="place-card__body">
       {tags.length > 0 && (
         <ul className="tags" role="list" aria-label="Categories">
