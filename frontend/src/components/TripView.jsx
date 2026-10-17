@@ -2,8 +2,8 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { ArrowClockwise, MapPin, Suitcase, Trash, WarningCircle } from '@phosphor-icons/react'
 import { useTrip } from '../state/TripContext.jsx'
 import { useAnnounce } from '../state/Announcer.jsx'
-import { useSpotlightAll } from './fx/useSpotlight.js'
 import { categoryLabels, formatCoordinates, formatDate, placeName } from '../lib/format.js'
+import DestinationImage from './plan/DestinationImage.jsx'
 
 export default function TripView({ headingRef, onOpenPlace }) {
   const uid = useId()
@@ -13,7 +13,6 @@ export default function TripView({ headingRef, onOpenPlace }) {
   const pendingFocus = useRef(null)
   const titleRefs = useRef(new Map())
   const listRef = useRef(null)
-  useSpotlightAll(listRef, '.trip-item', items)
 
   // After a removal, move focus to a neighbouring item (or the heading) so
   // keyboard users aren't dropped at the top of the document.
@@ -106,10 +105,11 @@ export default function TripView({ headingRef, onOpenPlace }) {
             const busy = pending.has(place.id)
             const tags = categoryLabels(place.categories, 2)
             return (
-              <li key={place.id} className="trip-item spot">
+              <li key={place.id} className="trip-item">
                 <span className="trip-item__index" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>
+                <DestinationImage city={name} className="trip-item__media" />
                 <div className="trip-item__main">
                   <h2 className="trip-item__title">
                     <button

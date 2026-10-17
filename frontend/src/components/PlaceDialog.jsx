@@ -9,6 +9,7 @@ import {
   osmUrl,
   placeName,
 } from '../lib/format.js'
+import DestinationImage from './plan/DestinationImage.jsx'
 
 const supportsClosedBy =
   typeof HTMLDialogElement !== 'undefined' && 'closedBy' in HTMLDialogElement.prototype
@@ -121,6 +122,8 @@ export default function PlaceDialog({ place, onClose, onGoToTrip }) {
           <h2 id={titleId} className="place-dialog__title">
             {name}
           </h2>
+
+          <DestinationImage city={name} className="place-dialog__media" credit />
 
           <dl className="facts">
             <div>

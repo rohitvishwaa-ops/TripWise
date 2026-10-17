@@ -1,14 +1,13 @@
-import { useRef } from 'react'
 import { CheckCircle, MapPin } from '@phosphor-icons/react'
-import { useSpotlight } from './fx/useSpotlight.js'
 import { categoryLabels, formatCoordinates, placeName } from '../lib/format.js'
+import DestinationImage from './plan/DestinationImage.jsx'
 
 export default function PlaceCard({ place, index, saved, onOpen }) {
   const tags = categoryLabels(place.categories)
-  const ref = useRef(null)
-  useSpotlight(ref)
   return (
-    <li ref={ref} className="place-card spot" style={{ '--i': Math.min(index, 12) }}>
+    <li className="place-card" style={{ '--i': Math.min(index, 12) }}>
+      <DestinationImage city={placeName(place)} className="place-card__media" />
+      <div className="place-card__body">
       {tags.length > 0 && (
         <ul className="tags" role="list" aria-label="Categories">
           {tags.map((tag) => (
@@ -35,6 +34,7 @@ export default function PlaceCard({ place, index, saved, onOpen }) {
             In My Trip
           </span>
         )}
+      </div>
       </div>
     </li>
   )
