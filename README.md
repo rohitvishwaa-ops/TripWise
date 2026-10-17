@@ -12,8 +12,8 @@ itinerary that is stored in a database.
 | Item | Link |
 |------|------|
 | GitHub repository | https://github.com/rohitvishwaa-ops/TripWise |
-| Live website (frontend) | `TODO: add deployed frontend URL` |
-| Live API (backend) | `TODO: add deployed backend URL` (interactive docs at `<backend URL>/docs`) |
+| Live website (frontend) | [TripWise](https://trip-wise-phi.vercel.app/) |
+| Live API (backend) | [Backend](https://tripwise-backend-3w5x.onrender.com) (interactive docs: [API documentation](https://tripwise-backend-3w5x.onrender.com/docs)) |
 | Screenshots PDF | `TODO: <register no>_<Track>.pdf` |
 
 ## Chosen track
