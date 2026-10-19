@@ -32,8 +32,8 @@ app = FastAPI(
     version="1.0.0",
     description=(
         "Destination discovery (Geoapify), saved places and day-by-day trip plans for "
-        "TripWise. Itinerary and trip endpoints are scoped to the anonymous browser "
-        "identity sent in the X-Trip-ID header."
+        "TripWise. Authenticated endpoints use verified Firebase identities; guest "
+        "itinerary and trip endpoints remain scoped to X-Trip-ID."
     ),
     lifespan=lifespan,
 )

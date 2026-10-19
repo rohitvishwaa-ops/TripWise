@@ -28,7 +28,7 @@ from database import (
     get_db,
     utcnow,
 )
-from itinerary import get_trip_id as get_owner_id
+from auth import get_request_owner as get_owner_id
 from places import get_api_key, get_http_client
 import ai_planner
 from api_docs import errors

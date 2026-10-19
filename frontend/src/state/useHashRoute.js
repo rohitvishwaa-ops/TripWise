@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react'
 
 // Deep-linkable, back-button friendly views:
 //   #explore, #trip (saved places), #plan, #plan/<trip id>
-const VIEWS = ['explore', 'trip', 'plan']
+const VIEWS = ['landing', 'explore', 'trip', 'plan', 'login', 'register', 'verify', 'recover', 'account']
 
 function read() {
   return window.location.hash.replace(/^#\/?/, '')
@@ -15,7 +15,7 @@ function subscribe(callback) {
 
 export function parseRoute(hash) {
   const [view, param = null] = hash.split('/')
-  return VIEWS.includes(view) ? { view, param: view === 'plan' ? param : null } : { view: 'explore', param: null }
+  return VIEWS.includes(view) ? { view, param: view === 'plan' ? param : null } : { view: 'landing', param: null }
 }
 
 export function useHashRoute() {

@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from api_docs import errors
+from auth import get_request_owner
 from database import ItineraryItem, get_db
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ PLACE_ID_PATTERN = r"^[A-Za-z0-9_.:-]+$"
 router = APIRouter(prefix="/api/itinerary", tags=["itinerary"])
 
 
-def get_trip_id(x_trip_id: str | None = Header(None, alias="X-Trip-ID")) -> str:
+def canonical_guest_id(x_trip_id: str | None) -> str:
     if not x_trip_id:
         raise HTTPException(status_code=400, detail="Missing X-Trip-ID header.")
     try:
@@ -35,6 +36,10 @@ def get_trip_id(x_trip_id: str | None = Header(None, alias="X-Trip-ID")) -> str:
             status_code=400, detail="X-Trip-ID must be a valid UUID."
         )
     return str(parsed)
+
+
+def get_trip_id(x_trip_id: str | None = Header(None, alias="X-Trip-ID")) -> str:
+    return canonical_guest_id(x_trip_id)
 
 
 class ItineraryPlaceIn(BaseModel):
@@ -101,7 +106,7 @@ def find_item(db: Session, trip_id: str, place_id: str) -> ItineraryItem | None:
 
 @router.get("", response_model=ItineraryResponse, responses=errors(400, 503))
 def list_itinerary(
-    trip_id: str = Depends(get_trip_id), db: Session = Depends(get_db)
+    trip_id: str = Depends(get_request_owner), db: Session = Depends(get_db)
 ):
     try:
         items = db.scalars(
@@ -123,7 +128,7 @@ def list_itinerary(
 )
 def add_to_itinerary(
     place: ItineraryPlaceIn,
-    trip_id: str = Depends(get_trip_id),
+    trip_id: str = Depends(get_request_owner),
     db: Session = Depends(get_db),
 ):
     try:
@@ -161,7 +166,7 @@ def add_to_itinerary(
 )
 def remove_from_itinerary(
     place_id: str = Path(..., min_length=1, max_length=512, pattern=PLACE_ID_PATTERN),
-    trip_id: str = Depends(get_trip_id),
+    trip_id: str = Depends(get_request_owner),
     db: Session = Depends(get_db),
 ):
     try:

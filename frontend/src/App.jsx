@@ -6,13 +6,16 @@ import PlanView from './components/plan/PlanView.jsx'
 import PlaceDialog from './components/PlaceDialog.jsx'
 import DataCredit from './components/DataCredit.jsx'
 import AddToDayDialog from './components/AddToDayDialog.jsx'
+import LandingView from './components/LandingView.jsx'
+import AuthView from './components/AuthView.jsx'
+import { getSession, onAuthStateChanged, signOut } from './lib/firebaseAuth.js'
 import { useGlide } from './components/fx/useGlide.js'
 import { TripProvider, useTrip } from './state/TripContext.jsx'
 import { AnnouncerProvider } from './state/Announcer.jsx'
 import { useHashRoute } from './state/useHashRoute.js'
 import './app.css'
 
-const TITLES = { explore: 'Explore | TripWise', trip: 'My Trip | TripWise', plan: 'Plan | TripWise' }
+const TITLES = { landing: 'TripWise | Plan the journey', explore: 'Explore | TripWise', trip: 'My Trip | TripWise', plan: 'Plan | TripWise', login: 'Sign in | TripWise', register: 'Create account | TripWise', verify: 'Verify email | TripWise', recover: 'Recover account | TripWise', account: 'Account | TripWise' }
 const THEME_KEY = 'tripwise-theme'
 
 function readTheme() {
@@ -39,7 +42,10 @@ function Shell() {
   const lastRoute = useRef(routeKey)
   const navRef = useRef(null)
   const [theme, setTheme] = useState(readTheme)
+  const [session, setSession] = useState(getSession)
   useGlide(navRef, view)
+
+  useEffect(() => onAuthStateChanged(setSession), [])
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -60,7 +66,7 @@ function Shell() {
     // not when React re-runs effects in development StrictMode).
     if (lastRoute.current === routeKey) return
     lastRoute.current = routeKey
-    const heading = { explore: exploreHeading, trip: tripHeading, plan: planHeading }[view].current
+    const heading = { explore: exploreHeading, trip: tripHeading, plan: planHeading }[view]?.current
     ;(heading ?? document.getElementById('content'))?.focus()
   }, [routeKey, view, param])
 
@@ -78,7 +84,7 @@ function Shell() {
       </a>
       <header className="site-header">
         <div className="site-header__inner">
-          <a href="#explore" className="brand">
+          <a href="#landing" className="brand">
             <span className="brand__mark" aria-hidden="true">
               <Compass size={22} weight="duotone" />
             </span>
@@ -126,6 +132,16 @@ function Shell() {
               </li>
             </ul>
           </nav>
+          <div className="auth-nav">
+            {session ? (
+              <>
+                <a className="auth-nav__link" href="#account">{session.email || 'Account'}</a>
+                <button type="button" className="auth-nav__button" onClick={() => { signOut(); window.location.hash = 'landing' }}>Sign out</button>
+              </>
+            ) : (
+              <a className="auth-nav__link" href="#login">Sign in</a>
+            )}
+          </div>
           <button
             type="button"
             className="theme-toggle"
@@ -141,15 +157,11 @@ function Shell() {
       </header>
 
       <main id="content" tabIndex={-1} className="page">
-        <div hidden={view !== 'explore'}>
-          <ExploreView headingRef={exploreHeading} onOpenPlace={setSelected} onAddToDay={setDayPlace} />
-        </div>
-        <div hidden={view !== 'plan'}>
-          <PlanView tripParam={param} headingRef={planHeading} active={view === 'plan'} />
-        </div>
-        <div hidden={view !== 'trip'}>
-          <TripView headingRef={tripHeading} onOpenPlace={setSelected} />
-        </div>
+        {view === 'landing' && <LandingView />}
+        {['login', 'register', 'verify', 'recover', 'account'].includes(view) && <AuthView view={view} session={session} />}
+        {view === 'explore' && <ExploreView headingRef={exploreHeading} onOpenPlace={setSelected} onAddToDay={setDayPlace} />}
+        {view === 'plan' && <PlanView tripParam={param} headingRef={planHeading} active />}
+        {view === 'trip' && <TripView headingRef={tripHeading} onOpenPlace={setSelected} />}
       </main>
 
       <footer className="site-footer">

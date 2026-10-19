@@ -1,6 +1,8 @@
 // Thin client for the TripWise FastAPI backend. Geoapify is only ever called
 // by the backend; the browser never sees an API key.
 
+import { FirebaseAuthError, getIdToken } from './firebaseAuth.js'
+
 const API_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '')
 const TIMEOUT_MS = 20000
 
@@ -34,6 +36,16 @@ async function request(path, { method = 'GET', tripId, body, signal, timeoutMs =
   const headers = { Accept: 'application/json' }
   if (tripId) headers['X-Trip-ID'] = tripId
   if (body !== undefined) headers['Content-Type'] = 'application/json'
+
+  try {
+    const idToken = await getIdToken()
+    if (idToken) headers.Authorization = `Bearer ${idToken}`
+  } catch (err) {
+    if (err instanceof FirebaseAuthError) {
+      throw new ApiError('Your session has expired. Sign in again to continue.', { status: 401 })
+    }
+    throw err
+  }
 
   let response
   try {

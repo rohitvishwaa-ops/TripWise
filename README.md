@@ -114,6 +114,36 @@ TripWise/
 The browser only talks to the TripWise backend; the backend talks to Geoapify
 and Neon. API keys and the database URL never reach the frontend.
 
+### Authentication foundation (Firebase Spark)
+
+The authentication foundation uses Firebase Authentication email/password
+flows. The current guest experience remains available through `X-Trip-ID`.
+When a bearer token is present, the FastAPI backend verifies the Firebase ID
+token and derives ownership only from its verified UID; it never uses a client
+owner ID for authenticated requests. The browser auth adapter supports
+registration, email verification, sign-in, refresh, sign-out and password
+reset, but the login screens are intentionally deferred to the next phase.
+
+Firebase setup is manual: create a Firebase project on the no-cost Spark plan,
+enable Email/Password in Authentication, configure the verification and reset
+email templates, and register a Web app. Set `VITE_FIREBASE_API_KEY` and
+`VITE_FIREBASE_PROJECT_ID` in the frontend environment. Set
+`FIREBASE_PROJECT_ID` and either Application Default Credentials or the
+`FIREBASE_SERVICE_ACCOUNT_JSON` Render secret in the backend. Never put an
+Admin SDK key or service-account JSON in the frontend or repository.
+
+Spark has no payment requirement for these authentication methods, but Firebase
+limits verification emails to 1,000/day and password-reset emails to 150/day;
+account creation is limited to 100/hour per IP. Exceeding a Spark quota stops
+that operation until the quota window resets. Phone/SMS authentication and
+paid Google Cloud services are intentionally outside this foundation.
+
+The reviewed migration is `backend/migrations/001_auth_foundation.sql`. It is
+not executed on startup. Review it, take the normal Neon backup/export, and
+run it manually in a transaction when the account UI is ready. Its rollback
+drops only the new empty `auth_accounts` table; it does not touch existing
+trips or saved places.
+
 ### Typography and font licences
 
 TripWise uses Bricolage Grotesque for interface text, Playfair Display for
