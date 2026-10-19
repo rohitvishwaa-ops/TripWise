@@ -9,7 +9,8 @@ const SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/'
 const COMMONS_API = 'https://commons.wikimedia.org/w/api.php'
 const results = new Map() // name -> image | null
 const pending = new Map() // name -> Promise
-const STORAGE_KEY = 'tripwise.destination-images.v1'
+// v2 adds the 1920px `xlarge` size used by full-bleed images.
+const STORAGE_KEY = 'tripwise.destination-images.v2'
 
 function readStored() {
   try {
@@ -63,6 +64,7 @@ async function fetchImage(name) {
     const summary = await res.json()
     if (summary.type === 'standard' && summary.thumbnail) {
       return {
+        xlarge: sizedUrl(summary, 1920),
         large: sizedUrl(summary, 1280),
         small: sizedUrl(summary, 500),
         pageUrl: summary.content_urls?.desktop?.page ?? null,

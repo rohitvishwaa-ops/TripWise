@@ -14,7 +14,8 @@
 */
 import { useEffect, useRef } from 'react'
 
-export function useGlide(listRef, activeKey, { bounce = 0.3, stretch = 0.5 } = {}) {
+// `enabled` re-attaches the indicator when the nav mounts (e.g. after sign-in).
+export function useGlide(listRef, activeKey, { bounce = 0.3, stretch = 0.5, enabled = true } = {}) {
   const api = useRef(null)
 
   useEffect(() => {
@@ -113,7 +114,7 @@ export function useGlide(listRef, activeKey, { bounce = 0.3, stretch = 0.5 } = {
       resize.disconnect()
       api.current = null
     }
-  }, [listRef, bounce, stretch])
+  }, [listRef, bounce, stretch, enabled])
 
   useEffect(() => {
     api.current?.(true)

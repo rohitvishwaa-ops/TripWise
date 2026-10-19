@@ -34,29 +34,34 @@ function sameCity(a, b) {
 }
 
 let rowSeq = 0
-const newRow = (days) => ({ key: `row-${++rowSeq}`, text: '', days: String(days), resolved: null, matches: null, error: null })
+const newRow = (days, text = '') => ({ key: `row-${++rowSeq}`, text, days: String(days), resolved: null, matches: null, error: null })
 
 /**
  * Plan a single-city or multi-city trip. Resolves the city with GET /api/geocode (asking
  * the user to choose when several places match), then POSTs to /api/trips
  * with generate=true. Calls onCreated(trip) with the saved, generated trip.
+ * `prefill` ({ cities, pace, interests }, from a landing-page link) only sets
+ * the starting values; nothing is submitted until the user generates.
  */
-export default function PlanForm({ onCreated, onBusyChange }) {
+export default function PlanForm({ onCreated, onBusyChange, prefill = null }) {
   const uid = useId()
   const { tripId } = useTrip()
-  const [cityText, setCityText] = useState('')
+  const prefillCities = prefill?.cities ?? []
+  const [cityText, setCityText] = useState(prefillCities.length === 1 ? prefillCities[0] : '')
   const [days, setDays] = useState('3')
   const [startDate, setStartDate] = useState('')
-  const [pace, setPace] = useState('balanced')
-  const [interests, setInterests] = useState([])
+  const [pace, setPace] = useState(prefill?.pace ?? 'balanced')
+  const [interests, setInterests] = useState(prefill?.interests ?? [])
   const [title, setTitle] = useState('')
   const [errors, setErrors] = useState({})
   const [phase, setPhase] = useState('idle') // idle | locating | generating
   const [matches, setMatches] = useState(null) // { query, results }
   const [resolved, setResolved] = useState(null) // { ...location, query }
   const [failure, setFailure] = useState(null) // { message, retryable }
-  const [mode, setMode] = useState('single') // 'single' | 'multi'
-  const [rows, setRows] = useState(() => [newRow(2), newRow(2)])
+  const [mode, setMode] = useState(prefillCities.length > 1 ? 'multi' : 'single') // 'single' | 'multi'
+  const [rows, setRows] = useState(() =>
+    prefillCities.length > 1 ? prefillCities.map((city) => newRow(2, city)) : [newRow(2), newRow(2)],
+  )
   const [focusRowKey, setFocusRowKey] = useState(null)
   const cityRef = useRef(null)
   const daysRef = useRef(null)

@@ -1,0 +1,1166 @@
+/*
+  Landing page. Built on the Field Atlas tokens in index.css.
+  Shape rule (same as the app): interactive controls are full pills, cards and
+  media are 20px (--radius-card). One action colour: --accent (coral) on
+  buttons, pins and pace dots; cobalt is used only for supporting ink.
+  The landing route drops the .page width cap so the ScrollExpand section can
+  run edge to edge; every other section re-centres at 1200px.
+*/
+
+.page.page--home {
+  max-width: none;
+  padding: 0 0 24px;
+}
+
+.home {
+  --home-max: 1200px;
+  --home-gutter: 16px;
+  display: grid;
+  gap: clamp(88px, 11vw, 160px);
+}
+
+@media (min-width: 768px) {
+  .home { --home-gutter: 32px; }
+}
+
+.home-hero,
+.home-section {
+  width: 100%;
+  max-width: calc(var(--home-max) + var(--home-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--home-gutter);
+}
+
+/* .home prefix: app.css (loaded after this file) also styles .btn and .eyebrow. */
+.home .home-btn {
+  min-height: 50px;
+  padding-inline: 24px;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  will-change: transform;
+}
+
+.home-btn svg {
+  transition: transform 220ms var(--ease-out);
+}
+
+.home-btn:hover svg {
+  transform: translateX(3px);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.home-section__title {
+  margin: 0;
+  max-width: 18ch;
+  font-size: var(--type-display-lg);
+  line-height: 1.08;
+  color: var(--ink);
+}
+
+.home-section__lede {
+  max-width: 46ch;
+  margin: 20px 0 0;
+  color: var(--ink-2);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+/* ---------- Hero ---------- */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+  min-height: min(820px, calc(100dvh - var(--header-h)));
+  padding-block: clamp(24px, 4vw, 56px) 0;
+}
+
+.home-hero > * {
+  min-width: 0;
+}
+
+.home-hero__title {
+  margin: 0 0 24px;
+  font-size: clamp(2.9rem, 0.6rem + 3.6vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.reveal-line {
+  display: block;
+}
+
+/* Two lines on desktop, never three. Phones may wrap. */
+@media (min-width: 961px) {
+  .reveal-line {
+    white-space: nowrap;
+  }
+}
+
+.reveal-line--em {
+  font-style: italic;
+  font-weight: 560;
+  color: var(--cobalt-ink);
+}
+
+[data-theme='dark'] .reveal-line--em {
+  color: #A9BCEB;
+}
+
+/* Each word rises out of its own mask. The mask is padded outward (and the
+   padding cancelled with negative margins) so descenders and italic
+   overhangs are never clipped. */
+.reveal-word {
+  display: inline-block;
+  overflow: clip;
+  padding: 0.04em 0.1em 0.2em;
+  margin: -0.04em -0.1em -0.2em;
+  vertical-align: top;
+}
+
+.reveal-word__inner {
+  display: inline-block;
+}
+
+.home-hero__lede {
+  max-width: 40ch;
+  margin: 0 0 32px;
+  color: var(--ink-2);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+  line-height: 1.6;
+}
+
+/* ---------- Hero planner (globe + ticket) ---------- */
+
+.hero-planner {
+  display: grid;
+  gap: 20px;
+}
+
+.hero-planner__stage {
+  position: relative;
+}
+
+.hero-globe {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 600px;
+  margin-inline: auto;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero-globe[data-dragging] {
+  cursor: grabbing;
+}
+
+/* Soft halo behind the sphere; also the loading placeholder's shape. */
+.hero-globe::before {
+  content: '';
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--cobalt) 16%, transparent), transparent 68%);
+  box-shadow: 0 40px 80px -40px color-mix(in srgb, var(--ink) 35%, transparent);
+  pointer-events: none;
+}
+
+.hero-globe--placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: var(--surface-2);
+}
+
+.hero-globe canvas {
+  position: relative;
+}
+
+.trip-ticket {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-end: 4%;
+  width: min(290px, 70%);
+  padding: 16px 18px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .trip-ticket {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.trip-ticket__head {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding-block-end: 12px;
+  margin-block-end: 12px;
+  border-block-end: 1.5px dashed var(--line-strong);
+}
+
+.trip-ticket__photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.trip-ticket__photo .dest-image__initial {
+  font-size: 1.1rem;
+}
+
+.trip-ticket__city {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 650;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.trip-ticket__meta {
+  margin: 2px 0 0;
+  color: var(--ink-3);
+  font-size: 0.8rem;
+}
+
+.trip-ticket__stops {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trip-ticket__stops li {
+  display: grid;
+  grid-template-columns: 5.6rem 1fr;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 650;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.trip-ticket__time {
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.hero-cities {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero-cities__chip {
+  position: relative;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+  isolation: isolate;
+  transition: color 200ms var(--ease-out), border-color 200ms var(--ease-out);
+}
+
+.hero-cities__chip:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.hero-cities__chip[aria-pressed='true'] {
+  border-color: transparent;
+  color: var(--bg);
+}
+
+.hero-cities__chip:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.hero-cities__pill {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ink);
+}
+
+/* ---------- Scroll-expand route section ---------- */
+
+.home-expand {
+  position: relative;
+}
+
+.home-expand .scroll-expand__stage {
+  top: var(--header-h);
+  height: calc(100dvh - var(--header-h)) !important;
+  background: var(--bg);
+}
+
+.home-expand .scroll-expand__frame {
+  background: var(--bg-deep);
+}
+
+.home-expand .scroll-expand__scrim {
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 52%, rgb(12 16 26 / 0.85), rgb(12 16 26 / 0.35) 70%),
+    linear-gradient(to top, rgb(12 16 26 / 0.6), transparent 50%);
+}
+
+.home-expand__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  padding-block-end: 0.12em;
+}
+
+.home-expand__overlay {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  max-width: 640px;
+  color: #FFF8F1;
+  text-shadow: 0 2px 18px rgb(12 16 26 / 0.5);
+}
+
+.home-expand__heading {
+  margin: 0;
+  font-size: var(--type-display-lg);
+  line-height: 1.08;
+  color: #FFF8F1;
+}
+
+.home-expand__body {
+  margin: 0 0 8px;
+  max-width: 46ch;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgb(255 248 241 / 0.9);
+}
+
+.home .home-expand__credit {
+  inset-block: auto 18px;
+  inset-inline: auto 18px;
+  text-shadow: none;
+}
+
+/* ---------- Journey ---------- */
+
+.journey {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+
+.journey__head {
+  position: sticky;
+  top: calc(var(--header-h) + 48px);
+}
+
+.journey__route {
+  position: relative;
+  padding-inline-start: 64px;
+}
+
+.journey__track {
+  position: absolute;
+  inset-block: 22px 22px;
+  inset-inline-start: 21px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.journey__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: top;
+}
+
+.journey__steps {
+  display: grid;
+  gap: clamp(40px, 6vw, 72px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey__step {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.journey__marker {
+  position: absolute;
+  inset-inline-start: -64px;
+  inset-block-start: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent-ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.journey__title {
+  margin: 6px 0 0;
+  font-size: 1.7rem;
+  color: var(--ink);
+}
+
+.journey__body {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ---------- Pace and interests ---------- */
+
+.home-tune {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+}
+
+.home-tune__panel {
+  display: grid;
+  gap: 20px;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.tune-group {
+  margin: 28px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.tune-group__legend {
+  margin-block-end: 10px;
+  padding: 0;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.tune-paces {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tune-pace {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 180ms var(--ease-out), background-color 180ms var(--ease-out);
+}
+
+.tune-pace:hover {
+  border-color: var(--ink-2);
+}
+
+.tune-pace[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.tune-pace__name {
+  font-weight: 750;
+}
+
+.tune-pace__detail {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.home-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-chip {
+  min-height: 38px;
+  padding: 7px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out), color 180ms var(--ease-out);
+}
+
+.home-chip:hover {
+  border-color: var(--ink-2);
+  color: var(--ink);
+}
+
+.home-chip[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+[data-theme='dark'] .home-chip[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: #F4DDD4;
+}
+
+.tune-pace:focus-visible,
+.home-chip:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tune-pace:active,
+.home-chip:active {
+  transform: scale(0.98);
+}
+
+.tune-day__head {
+  display: grid;
+  gap: 2px;
+}
+
+.tune-day__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.tune-day__meta {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 0.88rem;
+}
+
+.tune-day {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tune-day__stop {
+  display: grid;
+  grid-template-columns: 5.6rem 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
+}
+
+.tune-day__slot {
+  color: var(--ink-3);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.tune-day__name {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.tune-day__tag {
+  color: var(--accent-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+[data-theme='dark'] .tune-day__tag {
+  color: #F4B8A8;
+}
+
+.home .tune-cta {
+  justify-self: start;
+}
+
+.tune-day__note {
+  margin: -6px 0 0;
+  color: var(--ink-3);
+  font-size: 0.82rem;
+}
+
+/* ---------- Hero search ---------- */
+
+.where-to {
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+}
+
+.where-to__label {
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.where-to__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: border-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+}
+
+.where-to__field:focus-within {
+  border-color: var(--ink);
+  box-shadow: var(--shadow), 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.where-to__field[data-invalid] {
+  border-color: var(--danger);
+}
+
+.where-to__icon {
+  flex: none;
+  color: var(--ink-3);
+}
+
+/* width: 0 + flex: 1 so the input's built-in default width (about 20
+   characters) never widens the hero column on phones. */
+.where-to__input {
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.where-to__input::placeholder {
+  color: var(--ink-3);
+}
+
+.where-to__input:focus {
+  outline: none;
+}
+
+.home .where-to__submit {
+  flex: none;
+  min-height: 46px;
+  padding-inline: 20px;
+  border-radius: var(--radius-pill);
+}
+
+.where-to__error {
+  margin: 0;
+}
+
+.where-to__alt {
+  display: inline-block;
+  margin-block-start: 14px;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 4px;
+}
+
+.where-to__alt:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Globe modes and route builder ---------- */
+
+.globe-modes {
+  display: flex;
+  justify-self: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.globe-modes__btn {
+  position: relative;
+  min-height: 38px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.globe-modes__btn[aria-pressed='true'] {
+  color: var(--bg);
+}
+
+.globe-modes__btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.globe-modes__pill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ink);
+}
+
+.trip-ticket__note {
+  margin: 8px 0 0;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.route-list {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route-list__item {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.route-list__num {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.route-list__name {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.route-list__remove {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.route-list__remove:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.route-list__remove:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.home .route-cta {
+  width: 100%;
+  margin-block-start: 14px;
+  min-height: 44px;
+  border-radius: var(--radius-pill);
+}
+
+.hero-cities__order {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-inline-end: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.hero-cities__chip[aria-pressed='true']:not(:has(.hero-cities__pill)) {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+/* ---------- Destination rail ---------- */
+
+.rail__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 28px;
+}
+
+.rail__controls {
+  display: flex;
+  gap: 8px;
+}
+
+.rail__btn {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out), opacity 180ms var(--ease-out);
+}
+
+.rail__btn:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.rail__btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.rail__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.rail__btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rail__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(260px, 30vw, 360px);
+  gap: 16px;
+  /* Bleed to the right edge of the viewport so the next card peeks in. */
+  margin: 0 calc(50% - 50vw) 0 calc(var(--home-gutter) * -1);
+  padding: 12px var(--home-gutter) 28px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--home-gutter);
+  scrollbar-width: none;
+}
+
+.rail__track::-webkit-scrollbar {
+  display: none;
+}
+
+.rail__item {
+  scroll-snap-align: start;
+}
+
+.rail-card {
+  position: relative;
+  display: block;
+  height: clamp(340px, 34vw, 460px);
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  color: #FFF8F1;
+  text-decoration: none;
+  isolation: isolate;
+  box-shadow: var(--shadow);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.rail-card .dest-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.rail-card .dest-image img {
+  transform: scale(1.04);
+  transition: transform 900ms var(--ease-out);
+}
+
+.rail-card:hover .dest-image img,
+.rail-card:focus-visible .dest-image img {
+  transform: scale(1.1);
+}
+
+.rail-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgb(15 19 30 / 0.8), rgb(15 19 30 / 0) 55%);
+}
+
+.rail-card__glare {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgb(255 255 255 / 0.22), transparent 45%);
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out);
+  pointer-events: none;
+}
+
+.rail-card:hover .rail-card__glare {
+  opacity: 1;
+}
+
+.rail-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.rail-card__text {
+  position: absolute;
+  inset-inline: 22px;
+  inset-block-end: 20px;
+  display: grid;
+  gap: 2px;
+  transform: translateZ(30px);
+}
+
+.rail-card__city {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.rail-card__note {
+  color: rgb(255 248 241 / 0.85);
+  font-size: 0.92rem;
+}
+
+/* ---------- Stats ---------- */
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-block: 1px solid var(--line-strong);
+}
+
+.home-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  padding: 32px 24px;
+}
+
+.home-stat + .home-stat {
+  border-inline-start: 1px solid var(--line);
+}
+
+.home-stat__label {
+  color: var(--ink-3);
+  font-size: 0.9rem;
+}
+
+/* The sans face: Playfair's old-style figures read as uneven at this size. */
+.home-stat__value {
+  margin: 0;
+  font-family: var(--font);
+  font-size: clamp(2.6rem, 2rem + 2.4vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.home-stat__unit {
+  margin-inline-start: 0.12em;
+  font-size: 0.4em;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
+/* ---------- Closing CTA ---------- */
+
+.home-cta {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+  padding-block: clamp(16px, 3vw, 32px) clamp(48px, 8vw, 96px);
+  text-align: center;
+}
+
+.home-cta__title {
+  max-width: 14ch;
+  margin: 0;
+  font-size: var(--type-display-xl);
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+.home-cta__actions {
+  justify-content: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero-globe {
+    max-width: 520px;
+  }
+  .journey,
+  .home-tune {
+    grid-template-columns: 1fr;
+  }
+  .journey__head {
+    position: static;
+  }
+  .home-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .home-stat:nth-child(3) {
+    border-inline-start: 0;
+  }
+  .home-stat:nth-child(n + 3) {
+    border-block-start: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero__title {
+    font-size: clamp(2.6rem, 12.5vw, 3.5rem);
+  }
+  .home .home-btn {
+    flex: 1 1 auto;
+  }
+  /* The ticket sits under the globe on phones instead of covering it. */
+  .trip-ticket {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    margin-block-start: -12%;
+  }
+  .hero-cities {
+    justify-content: flex-start;
+  }
+  .home .where-to__submit {
+    padding-inline: 16px;
+  }
+  .tune-paces {
+    grid-template-columns: 1fr;
+  }
+  .tune-day__stop {
+    grid-template-columns: 4.8rem 1fr;
+  }
+  .tune-day__tag {
+    grid-column: 2;
+  }
+  .journey__route {
+    padding-inline-start: 56px;
+  }
+  .journey__marker {
+    inset-inline-start: -56px;
+  }
+  .home-pace__item {
+    grid-template-columns: 1fr auto;
+    row-gap: 6px;
+  }
+  .home-pace__count {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .rail__track {
+    grid-auto-columns: 78%;
+  }
+  .rail-card {
+    height: 320px;
+  }
+  .home-stat {
+    padding: 24px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-btn svg,
+  .rail-card .dest-image img,
+  .rail-card__glare,
+  .hero-cities__chip {
+    transition: none;
+  }
+}

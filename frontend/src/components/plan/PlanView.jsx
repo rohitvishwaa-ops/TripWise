@@ -5,6 +5,7 @@ import TripDetail, { TripDetailError, TripDetailSkeleton } from './TripDetail.js
 import { getTrip, listTrips } from '../../lib/api.js'
 import { useTrip } from '../../state/TripContext.jsx'
 import { useAnnounce } from '../../state/Announcer.jsx'
+import { parsePlanPrefill } from '../../lib/planOptions.js'
 import './plan.css'
 
 // Generation warnings are returned only by POST /api/trips (not stored), so
@@ -32,7 +33,7 @@ function toSummary(trip) {
   return summary
 }
 
-export default function PlanView({ tripParam: rawParam, headingRef, active }) {
+export default function PlanView({ tripParam: rawParam, query = '', headingRef, active }) {
   const uid = useId()
   const tripParam = rawParam ? rawParam.toLowerCase() : null
   const { tripId } = useTrip()
@@ -139,7 +140,8 @@ export default function PlanView({ tripParam: rawParam, headingRef, active }) {
 
       <div className="plan__layout">
         <div className="plan__form">
-          <PlanForm onCreated={handleCreated} onBusyChange={setBusy} />
+          {/* A new prefill link remounts the form so it starts from that link. */}
+          <PlanForm key={query} prefill={parsePlanPrefill(query)} onCreated={handleCreated} onBusyChange={setBusy} />
         </div>
         <div className="plan__side">
           {busy?.phase === 'generating' ? (

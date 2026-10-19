@@ -4,7 +4,7 @@ import ExploreView from './components/ExploreView.jsx'
 import TripView from './components/TripView.jsx'
 import PlanView from './components/plan/PlanView.jsx'
 import PlaceDialog from './components/PlaceDialog.jsx'
-import DataCredit from './components/DataCredit.jsx'
+import SiteFooter from './components/SiteFooter.jsx'
 import AddToDayDialog from './components/AddToDayDialog.jsx'
 import LandingView from './components/LandingView.jsx'
 import AuthView from './components/AuthView.jsx'
@@ -31,7 +31,7 @@ function readTheme() {
 }
 
 function Shell() {
-  const { view, param } = useHashRoute()
+  const { view, param, query } = useHashRoute()
   const { items, status } = useTrip()
   const [selected, setSelected] = useState(null)
   const [dayPlace, setDayPlace] = useState(null)
@@ -43,7 +43,9 @@ function Shell() {
   const navRef = useRef(null)
   const [theme, setTheme] = useState(readTheme)
   const [session, setSession] = useState(getSession)
-  useGlide(navRef, view)
+  // The app navigation is for signed-in visitors and never shows on the landing page.
+  const showNav = Boolean(session) && view !== 'landing'
+  useGlide(navRef, view, { enabled: showNav })
 
   useEffect(() => onAuthStateChanged(setSession), [])
 
@@ -90,7 +92,7 @@ function Shell() {
             </span>
             <span className="brand__name">TripWise</span>
           </a>
-          <nav aria-label="Main">
+          {showNav && <nav aria-label="Main">
             <ul className="nav" ref={navRef}>
               <li>
                 <a
@@ -131,7 +133,7 @@ function Shell() {
                 </a>
               </li>
             </ul>
-          </nav>
+          </nav>}
           <div className="auth-nav">
             {session ? (
               <>
@@ -156,17 +158,15 @@ function Shell() {
         </div>
       </header>
 
-      <main id="content" tabIndex={-1} className="page">
+      <main id="content" tabIndex={-1} className={view === 'landing' ? 'page page--home' : 'page'}>
         {view === 'landing' && <LandingView />}
         {['login', 'register', 'verify', 'recover', 'account'].includes(view) && <AuthView view={view} session={session} />}
         {view === 'explore' && <ExploreView headingRef={exploreHeading} onOpenPlace={setSelected} onAddToDay={setDayPlace} />}
-        {view === 'plan' && <PlanView tripParam={param} headingRef={planHeading} active />}
+        {view === 'plan' && <PlanView tripParam={param} query={query} headingRef={planHeading} active />}
         {view === 'trip' && <TripView headingRef={tripHeading} onOpenPlace={setSelected} />}
       </main>
 
-      <footer className="site-footer">
-        <DataCredit />
-      </footer>
+      <SiteFooter />
 
       <PlaceDialog
         place={selected}
